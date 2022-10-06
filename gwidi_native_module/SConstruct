@@ -13,6 +13,8 @@ opts.Add(EnumVariable('p', "Compilation target, alias for 'platform'", '', ['', 
 opts.Add(BoolVariable('use_llvm', "Use the LLVM / Clang compiler", 'no'))
 opts.Add(PathVariable('target_path', 'The path where the lib is installed.', 'bin/'))
 opts.Add(PathVariable('target_name', 'The library name.', 'libgwidi', PathVariable.PathAccept))
+opts.Add(PathVariable('gwidi_libs_path', 'The path for gwidi libs', 'external/bin/'))
+opts.Add(PathVariable('gwidi_headers_path', 'The path for gwidi headers', 'external/include/'))
 
 # Local dependency paths, adapt them to your setup
 godot_headers_path = "./../godot-cpp/godot-headers/"
@@ -93,9 +95,11 @@ else:
 cpp_library += '.' + str(bits)
 
 # make sure our binding library is properly includes
-env.Append(CPPPATH=['.', './include/', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/'])
-env.Append(LIBPATH=[cpp_bindings_path + 'bin/'])
-env.Append(LIBS=[cpp_library])
+env.Append(CPPPATH=['.', './include/', godot_headers_path, cpp_bindings_path + 'include/', cpp_bindings_path + 'include/core/', cpp_bindings_path + 'include/gen/',
+    env['gwidi_headers_path'] + "gwidi_midi", env['gwidi_headers_path'] + "gwidi_options", env['gwidi_headers_path'] + "gwidi_playback", env['gwidi_headers_path'] + "midifile",
+    env['gwidi_headers_path'] + "spdlog"])
+env.Append(LIBPATH=[cpp_bindings_path + 'bin/', env['gwidi_libs_path']])
+env.Append(LIBS=[cpp_library, 'libgwidi_midi_parser.a', 'libgwidi_options.a', 'libgwidi_tick_parser.a', 'libmidifile.a', 'libspdlogd.a'])
 
 # tweak this if you want to use different folders, or more folders, to store your source code in.
 env.Append(CPPPATH=['src/'])

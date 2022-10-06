@@ -21,6 +21,8 @@ public:
 
     void _init();
     void _process(float delta);
+
+    void importMidi(const char* filename);
 };
 
 }

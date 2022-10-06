@@ -1,3 +1,6 @@
 [submodule "godot-cpp"]
 	path = godot-cpp
 	url = https://github.com/godotengine/godot-cpp.git
+[submodule "gwidi_midi_parser"]
+	path = gwidi_midi_parser
+	url = https://github.com/zphensley42/gwidi_midi_parser.git

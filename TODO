@@ -1,0 +1,3 @@
+- Create better cmake structure to not require individual builds / exports for all targets
+- Create better cmake commands to output all headers for use in the godot scons project as well
+-- Alternatively, make scons look at a more central location for all the headers (the cmake project)
