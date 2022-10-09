@@ -1,8 +1,8 @@
-#include "include/gwidi_midi.h"
+#include "gwidi_midi.h"
 #include <sstream>
 
-#include "GwidiOptions.h"
-#include "GwidiTickHandler.h"
+#include "gwidi/GwidiOptions.h"
+#include "gwidi/GwidiTickHandler.h"
 
 #define TEST_FILE R"(/home/zhensley/repos/gwidi_godot/gwidi_midi_parser/assets/moana.mid)"
 
@@ -63,6 +63,7 @@ void GwidiMidi::_init() {
 
     // For testing, just import as soon as we start
     importMidi(TEST_FILE);
+    buildDefaultData();
 }
 
 void GwidiMidi::_process(float delta) {
@@ -72,5 +73,42 @@ void GwidiMidi::_process(float delta) {
     ss << "time_passed: " << time_passed;
     Godot::print(ss.str().c_str());
 }
+
+void GwidiMidi::buildDefaultData() {
+    m_data = new GwidiData();
+    std::vector<Note> notes{};
+    m_data->addTrack("Piano", "Default", notes, 300);
+    // need to ensure that we update the track duration when we add notes
+}
+
+// TODO: Another idea instead of doing individual toggles is to treat the GUI data separately and translate it all to
+// TODO: GwidiData when we attempt to play it?
+void GwidiMidi::toggleNote(int octave, double timeOffset, const std::string &letter) {
+    // assume we are always editing track 0 (for now, probably need to ensure this for cases where we have imported a midi file)
+    // TODO: probably just enforce a single track after import
+
+    // 'toggling' a note in our sense means adding or removing it from the data
+    // the existence of a note in the tickMap will cause that note to play during tick handling
+    // so, we just need to ensure that we can remove from the map if it exists and add it if it does not
+
+    auto &tickMap = m_data->getTickMap();
+    auto &track1 = tickMap[0];
+    auto noteIt = track1.find(timeOffset);
+    if(noteIt != track1.end()) {
+        auto &notes = noteIt->second;
+        for(auto &note : notes) {
+            if(note.key == letter && note.octave == octave) {
+                // TODO: Can do this with a find_if or something
+                // TODO: if we find it, we need to remove it
+                // TODO: if we can't find it, we need to add it
+
+                // TODO: adding to tick map works to ensure it plays, but tick map is just a mapping of the tracks themselves
+                // TODO: so, we need to eventually propagate the tick map changes back to the track listing (maybe when we save the file?)
+                break;
+            }
+        }
+    }
+}
+
 
 }

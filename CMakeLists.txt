@@ -1,0 +1,26 @@
+cmake_minimum_required(VERSION 3.20)
+project(gwidi_godot)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+option(ARCHITECTURE "x64 or x86 CPU Arch" "x64")
+option(GODOT_PLATFORM "x11, windows, osx, etc" "x11")
+
+if(NOT ARCHITECTURE)
+    set(ARCHITECTURE "x64" CACHE STRING "x64 or x86 CPU Arch" FORCE)
+endif()
+
+if(NOT GODOT_PLATFORM)
+    set(GODOT_PLATFORM "x11" CACHE STRING "x11, windows, osx, etc" FORCE)
+endif()
+
+message("ARCHITECTURE: ${ARCHITECTURE}")
+message("GODOT_PLATFORM: ${GODOT_PLATFORM}")
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/${ARCHITECTURE}")
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${CMAKE_BUILD_TYPE}/${ARCHITECTURE}")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/gwidi_native_module/bin/${GODOT_PLATFORM}/")
+set(CMAKE_CXX_STANDARD 17)
+
+add_subdirectory(godot-cpp)
+add_subdirectory(gwidi_native_module)
