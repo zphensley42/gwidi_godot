@@ -71,7 +71,7 @@ void GwidiMidi::_process(float delta) {
 
     std::stringstream ss;
     ss << "time_passed: " << time_passed;
-    Godot::print(ss.str().c_str());
+    // Godot::print(ss.str().c_str());
 }
 
 void GwidiMidi::buildDefaultData() {

@@ -14,6 +14,8 @@ var current_scroll_data_index = 0
 var list_width = 0
 var measured_node_width = 0
 
+export var list_offset = Vector2(0, 0)
+
 func measured_list_width():
 	return measured_node_width * data_items.size()
 
@@ -21,9 +23,9 @@ var scroll_x = 0
 var scroll_y = 0
 func on_scroll(sx, sy):
 	print("on_scroll(" + str(sx) + ", " + str(sy) + ")")
-	$Nodes.position.x = sx
+	$Canvas/Nodes.position.x = sx
 	scroll_x = sx
-	$Nodes.position.y = sy
+	$Canvas/Nodes.position.y = sy
 	scroll_y = sy
 	
 	check_recycle()
@@ -46,17 +48,17 @@ func check_recycle():
 	
 	# print("first_visible_data_pos: " + str(first_visible_data_pos) + ", last_visible_data_pos: " + str(last_visible_data_pos))
 	
-	for pos in range(first_visible_data_pos, last_visible_data_pos):
+	for pos in range(first_visible_data_pos, last_visible_data_pos + 1):	# +1 to ensure we always have one after the visual 'end'
 		if pos >= data_items.size() or pos < 0:
 			break
 		
 		var view_pos = pos % view_items.size()
-		var view_node = $Nodes.get_child(view_pos)
+		var view_node = $Canvas/Nodes.get_child(view_pos)
 		# print("pos: " + str(pos) + ", view_pos: " + str(view_pos))
 		
 		# Only bind when the data position has changed for the view (before we re-assign the position)
 		if view_node.data_pos != pos:
-			view_node.bind_data(data_items[pos])
+			view_node.bind_data(data_item_for_position(pos))
 		
 		view_node.init(Vector2(pos * view_node.node_width(), 0), pos)
 
@@ -73,8 +75,8 @@ func assign_data(d):
 
 func build_nodes():
 	view_items.clear()
-	for c in $Nodes.get_children():
-		$Nodes.remove_child(c)
+	for c in $Canvas/Nodes.get_children():
+		$Canvas/Nodes.remove_child(c)
 		c.queue_free()
 		
 	var xpos = 0
@@ -82,11 +84,11 @@ func build_nodes():
 	for i in item_range:
 		var node = ListNode.instance()
 		node.init(Vector2(xpos, 0), i)
-		$Nodes.add_child(node)
+		$Canvas/Nodes.add_child(node)
 		view_items[i] = node
 		xpos += node.node_width()
 		
-		bind_node(node, data_items[i])
+		bind_node(node, data_item_for_position(i))
 
 func bind_node(n, d):
 	n.bind_data(d)
@@ -95,13 +97,65 @@ func bind_node(n, d):
 func _ready():
 	randomize()
 	
-	var data = ["Test 1", "Test 2", "Test 3", "Test 4", "Test 5", "Test 6"]
-	assign_data(data)
+	var eventRegister = get_node("/root/GlobalEventRegister")
+	eventRegister.register_recycler(self)
 	
-	list_width = $Background.margin_right
+	$Canvas/Nodes.position = list_offset
+	$Canvas/Background.margin_left = list_offset[0]
+	$Canvas/Background.margin_top = list_offset[1]
+	
+	var d = build_test_data()
+	assign_data(d)
+	
+	list_width = $Canvas/Background.margin_right - $Canvas/Background.margin_left
+	var list_height = $Canvas/Background.margin_bottom - $Canvas/Background.margin_top
 	
 	var dummy = ListNode.instance()
-	$ScrollController.init(dummy, $Background.margin_right, $Background.margin_bottom, data_items.size(), self)
+	$ScrollController.init(dummy, list_offset, list_width, list_height, data_items.size(), self)
 	measured_node_width = dummy.node_width()
 	dummy.queue_free()
 
+func _on_note_activated(measure, octave, pitch, time):
+	print("_on_note_activated received{")
+	print("\tmeasure: " + str(measure))
+	print("\toctave: " + str(octave))
+	print("\tpitch: " + str(pitch))
+	print("\ttime: " + str(time))
+	print("}")
+	
+	data_items[measure][octave][time][pitch] = true 
+
+func data_item_for_position(pos):
+	return { "measure": pos, "data": data_items[pos] }
+
+# TODO: Actually build this data from a couple of places:
+# TODO: 1 - default, no actual data but instead use a set of params like
+# TODO:   - # of measures, instrument config, etc
+# TODO: 2 - parsed midi import data and instrument config
+# TODO: 3 - loaded gwidi data and instrument config
+func build_test_data():
+	# map[measure] = { octave: [{letter:activated, letter:activated}, {letter:activated, letter:activated}], octave2: etc. }
+	var ret = {}
+	for measure_num in range(0, 8):
+		ret[measure_num] = {}
+		
+		for octave in range(0, 4):
+			ret[measure_num][octave] = []
+			for time in range (0, 16):
+				var time_entry = {}
+				if octave < 3:
+					time_entry = {
+						"C": false,
+						"D": false,
+						"E": false,
+						"F": false,
+						"G": false,
+						"A": false,
+						"B": false,
+					}
+				else:
+					time_entry = {
+						"C": false,
+					}
+				ret[measure_num][octave].append(time_entry)
+	return ret

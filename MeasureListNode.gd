@@ -5,6 +5,8 @@ const Octave = preload("res://Octave.tscn")
 var is_visible = false
 var data_pos = null
 
+var measure_num = 0
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	build_octaves()
@@ -13,7 +15,7 @@ func build_octaves():
 	for i in range(Globals.num_octaves):
 		var octave = Octave.instance()
 		$Octaves.add_child(octave)
-		octave.init(i)
+		octave.init()
 
 func init(p, dp):
 	if data_pos != null and data_pos == dp:
@@ -38,11 +40,15 @@ func node_height():
 	return Globals.num_octaves * Globals.octave_height()
 
 func bind_data(data):
-	$Title.text = data
+	measure_num = data["measure"]
+	$Title.text = str(measure_num)
+	for octave_num in range($Octaves.get_child_count()):
+		var octave = $Octaves.get_child(octave_num)
+		var octave_data = {"measure": measure_num, "octave": octave_num, "data": data["data"][octave_num]}
+		octave.bind_data(octave_data)
 
 func _on_VisNotifier_screen_entered():
 	is_visible = true
-
 
 func _on_VisNotifier_screen_exited():
 	is_visible = false

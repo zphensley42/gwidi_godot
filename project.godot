@@ -17,6 +17,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Globals="*res://Globals.gd"
+GlobalEventRegister="*res://GlobalEventRegister.gd"
 
 [gui]
 

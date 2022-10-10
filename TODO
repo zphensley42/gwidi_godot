@@ -1,5 +1,10 @@
-- Create better cmake structure to not require individual builds / exports for all targets
-- Create better cmake commands to output all headers for use in the godot scons project as well
--- Alternatively, make scons look at a more central location for all the headers (the cmake project)
-
-- UPDATE to the above: Just do find_package stuff locally and make a top-level install cmake to run install commands for all projects instead of doing an install PER project
+- Lots of TODOs in the godot project itself, but I think it boils down to a few main things for now:
+-- The building/binding/display of all of the measures/octaves/notes need to be dependent on the currently selected instrument configuration. This means:
+--- Build file selector in godot to pick the config
+--- Parse config after selected (in gwidi_options)
+--- Provide parsed config from gwidi_options back to godot script
+--- Convert parsed config to GUI by rebinding measures/octaves/notes to match existing configuration for the instrument
+---- Primarily: # of octaves, letter notes in the octaves
+-- Options for adding/removing/setting the # of measures currently available
+--- This needs to tie-into the track length in gwidi data itself (tick?)
+-- Once the above 2 things are done, update to use gwidi for the initial data creation and begin adding controls back to gwidi to update the data

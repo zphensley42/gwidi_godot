@@ -1,11 +1,17 @@
 extends Node
 
 var data_count = 0
+var list_offset = 0
 var list_width = 0
 var list_height = 0
 var measured_node_width = 0
 var measured_node_height = 0
 var scroll_callback = null
+
+
+var scroll_mult = 10
+var scroll_x = 0
+var scroll_y = 0
 
 func measured_list_width():
 	return measured_node_width * data_count
@@ -13,21 +19,26 @@ func measured_list_width():
 func measured_list_height():
 	return measured_node_height
 
-func init(dummy_node, lw, lh, dc, scroll_cb):
+func init(dummy_node, lo, lw, lh, dc, scroll_cb):
+	list_offset = lo
 	list_width = lw
 	list_height = lh
 	data_count = dc
 	
+	scroll_x = list_offset[0]
+	scroll_y = list_offset[1]
+	
 	measured_node_width = dummy_node.node_width()
 	measured_node_height = dummy_node.node_height()
+	
+	list_width += measured_node_width # don't allow scrolling outside the end of the last view
+	list_height += (measured_node_height / 2)
 	
 	scroll_callback = scroll_cb
 
 
 # HANDLE SCROLLING AMOUNT
-var scroll_mult = 10
-var scroll_x = 0
-var scroll_y = 0
+# TODO: Don't allow mouse button scrolling if we aren't hovering over our nodes when we start the action
 var is_dragging = false
 var dragging_start = null
 var dragging_current = null
@@ -74,15 +85,15 @@ func _process(delta):
 func update_scroll():
 	var lw = -(measured_list_width() - list_width)
 	# Clamp our scroll to start/end of the list
-	if scroll_x >= 0:
-		scroll_x = 0
+	if scroll_x >= list_offset[0]:
+		scroll_x = list_offset[0]
 	elif scroll_x <= lw:
 		scroll_x = lw
 	
 	var lh = -(measured_list_height() - list_height)
 	# Clamp our scroll to start/end of the list
-	if scroll_y >= 0:
-		scroll_y = 0
+	if scroll_y >= list_offset[1]:
+		scroll_y = list_offset[1]
 	elif scroll_y <= lh:
 		scroll_y = lh
 		

@@ -1,26 +1,102 @@
 extends Node2D
 
+signal note_activated
+
+var measure = 0
 var pitch = 0
 var time = 0
+var octave = 0
+var letter = ""
 
+var activated = false
+var hovered = false
 
-func init(p, t):
-	pitch = p
-	time = t
+# This should come from instrument config I guess
+# TODO: An issue with how we draw GUI is that these are displayed in the opposite order
+# TODO: quick-fix is to map them in opposite order here
+var pitches = {
+	"B": 0,
+	"A": 1,
+	"G": 2,
+	"F": 3,
+	"E": 4,
+	"D": 5,
+	"C": 6
+}
+
+func bind_data(measure_num, octave_num, note_time, note_letter, note_act):
+	measure = measure_num
+	octave = octave_num
+	pitch = pitches[note_letter]
+	letter = note_letter
+	time = note_time
+	activated = note_act
 	
+	$Title.text = str(pitch) + " " + str(time) + " " + letter
+	change_draw_state()
+	
+	bind_position()
+
+func bind_position():
 	position = Vector2(Globals.note_width * time, Globals.note_height * pitch)
+
+func init():
+	bind_position()
 	$TitleBackground.margin_right = Globals.note_width
 	$TitleBackground.margin_bottom = Globals.note_height
 	$Title.margin_right = Globals.note_width
 	$Title.margin_bottom = Globals.note_height
 	
-	$Title.text = str(pitch) + " " + str(time)
+	$Title.text = str(pitch) + " " + str(time) + " " + letter
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	var eventRegister = get_node("/root/GlobalEventRegister")
+	eventRegister.register_note(self)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+
+func _on_TitleBackground_mouse_entered():
+	hovered = true
+	change_draw_state()
+
+
+func _on_TitleBackground_mouse_exited():
+	hovered = false
+	change_draw_state()
+
+func change_draw_state():
+	if hovered and activated:
+		$TitleBackground.color = Color("f45712")
+	elif hovered:
+		$TitleBackground.color = Color.darkturquoise
+	elif activated:
+		$TitleBackground.color = Color.chocolate
+	else:
+		$TitleBackground.color = Color("b7bed2")
+
+# TODO: Probably need a separate controller keeping track of when down starts/ends so that we can
+# TODO: handle toggling (only toggle once per down/up)
+# TODO: clear activated state on rebind (i.e. state is per data, not per view)
+# TODO: per the above, need to pass this as event back so it can propagate?
+# TODO: There are some issues with dragging due to how godot attempts to keep controls focused
+# TODO: when the mouse is held, see: https://github.com/godotengine/godot/issues/20881
+# TODO: for now, don't do dragging stuff I guess
+func _input(event):
+	if not hovered:
+		return
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == BUTTON_RIGHT:
+			activated = !activated
+			event.pressed = false
+			
+			if activated:
+				emit_signal("note_activated", measure, octave, letter, time)
+			change_draw_state()
+
+func _on_TitleBackground_gui_input(event):
+	pass
+
