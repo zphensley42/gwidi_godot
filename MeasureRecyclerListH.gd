@@ -5,6 +5,8 @@ const ListNode = preload("res://MeasureListNode.tscn")
 # TODO: Attempt to use this implementation of a list with nodes as the holder of measures
 # TODO: Each measure is a node in the list, should help us re-use nodes for large datasets
 
+# TODO: Need to resize to the viewport size when the viewport size changes
+
 var data_items = []
 var view_items = {}
 export var max_view_items = 4
@@ -93,9 +95,26 @@ func build_nodes():
 func bind_node(n, d):
 	n.bind_data(d)
 
+func init_scroll_controller():
+	var vp_size = get_viewport().size
+	
+	$Canvas/Background.update()
+	list_width = $Canvas/Background.rect_size.x
+	var list_height = $Canvas/Background.rect_size.y
+	
+	var dummy = ListNode.instance()
+	$ScrollController.init(dummy, list_offset, list_width, list_height, data_items.size(), self)
+	measured_node_width = dummy.node_width()
+	dummy.queue_free()
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	randomize()
+	
+	# TODO: Instead of active resize, have a setting to move to full-screen or other resolutions
+	# TODO: with this setting, explicitly resize things on setting change
+	OS.min_window_size = Vector2(1024, 600)
+	# get_tree().get_root().connect("size_changed", self, "init_scroll_controller")
 	
 	var eventRegister = get_node("/root/GlobalEventRegister")
 	eventRegister.register_recycler(self)
@@ -107,13 +126,7 @@ func _ready():
 	var d = build_test_data()
 	assign_data(d)
 	
-	list_width = $Canvas/Background.rect_size.x
-	var list_height = $Canvas/Background.rect_size.y
-	
-	var dummy = ListNode.instance()
-	$ScrollController.init(dummy, list_offset, list_width, list_height, data_items.size(), self)
-	measured_node_width = dummy.node_width()
-	dummy.queue_free()
+	init_scroll_controller()
 
 func _on_note_activated(measure, octave, pitch, time):
 	print("_on_note_activated received{")

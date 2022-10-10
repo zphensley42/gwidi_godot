@@ -19,6 +19,7 @@ func measured_list_width():
 func measured_list_height():
 	return measured_node_height
 
+# TODO: There is still something funky with this as we resize the window
 func init(dummy_node, lo, lw, lh, dc, scroll_cb):
 	list_offset = lo
 	list_width = lw
@@ -32,6 +33,17 @@ func init(dummy_node, lo, lw, lh, dc, scroll_cb):
 	measured_node_height = dummy_node.node_height()
 	
 	scroll_callback = scroll_cb
+	
+	print("scroll controller init:{")
+	print("\tlist_offset: " + str(list_offset))
+	print("\tlist_width: " + str(list_width))
+	print("\tlist_height: " + str(list_height))
+	print("\tdata_count: " + str(data_count))
+	print("\tscroll_x: " + str(scroll_x))
+	print("\tscroll_y: " + str(scroll_y))
+	print("\tmeasured_node_width: " + str(measured_node_width))
+	print("\tmeasured_node_height: " + str(measured_node_height))
+	print("}")
 
 
 # HANDLE SCROLLING AMOUNT

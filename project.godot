@@ -19,6 +19,12 @@ config/icon="res://icon.png"
 Globals="*res://Globals.gd"
 GlobalEventRegister="*res://GlobalEventRegister.gd"
 
+[display]
+
+window/size/resizable=false
+window/size/test_width=1024
+window/size/test_height=600
+
 [gui]
 
 common/drop_mouse_on_gui_input_disabled=true
