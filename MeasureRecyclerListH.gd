@@ -107,8 +107,8 @@ func _ready():
 	var d = build_test_data()
 	assign_data(d)
 	
-	list_width = $Canvas/Background.margin_right - $Canvas/Background.margin_left
-	var list_height = $Canvas/Background.margin_bottom - $Canvas/Background.margin_top
+	list_width = $Canvas/Background.rect_size.x
+	var list_height = $Canvas/Background.rect_size.y
 	
 	var dummy = ListNode.instance()
 	$ScrollController.init(dummy, list_offset, list_width, list_height, data_items.size(), self)

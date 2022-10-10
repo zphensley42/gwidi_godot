@@ -10,6 +10,11 @@ var recycler = null
 func register_recycler(r):
 	recycler = r
 
+func unregister_note(note):
+	var found = notes.find(note)
+	if found != -1:
+		notes.remove(found)
+
 func register_note(note):
 	if notes.has(note):
 		return

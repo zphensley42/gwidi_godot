@@ -54,6 +54,9 @@ func _ready():
 	var eventRegister = get_node("/root/GlobalEventRegister")
 	eventRegister.register_note(self)
 
+func _exit_tree():
+	var eventRegister = get_node("/root/GlobalEventRegister")
+	eventRegister.unregister_note(self)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

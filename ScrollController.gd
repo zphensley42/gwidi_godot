@@ -31,9 +31,6 @@ func init(dummy_node, lo, lw, lh, dc, scroll_cb):
 	measured_node_width = dummy_node.node_width()
 	measured_node_height = dummy_node.node_height()
 	
-	list_width += measured_node_width # don't allow scrolling outside the end of the last view
-	list_height += (measured_node_height / 2)
-	
 	scroll_callback = scroll_cb
 
 
@@ -95,7 +92,7 @@ func update_scroll():
 	if scroll_y >= list_offset[1]:
 		scroll_y = list_offset[1]
 	elif scroll_y <= lh:
-		scroll_y = lh
+		scroll_y = lh 
 		
 	# $Nodes.position.x = scroll_x
 	
