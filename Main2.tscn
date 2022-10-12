@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=2]
 
-[ext_resource path="res://gwidi_native_module/bin/gwidi.gdns" type="Script" id=1]
+[ext_resource path="res://gwidi_native_module/bin/gwidi_midi.gdns" type="Script" id=1]
 [ext_resource path="res://MeasureRecyclerListH.tscn" type="PackedScene" id=2]
 
 [node name="Main2" type="Node2D"]
@@ -9,7 +9,7 @@
 position = Vector2( 0, 50 )
 list_offset = Vector2( 0, 50 )
 
-[node name="Gwidi" type="Node" parent="."]
+[node name="GwidiMidi" type="Node" parent="."]
 script = ExtResource( 1 )
 
 [node name="UiCanvasLayer" type="CanvasLayer" parent="."]

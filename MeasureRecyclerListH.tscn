@@ -1,13 +1,17 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://MeasureRecyclerListH.gd" type="Script" id=1]
 [ext_resource path="res://ScrollController.gd" type="Script" id=2]
+[ext_resource path="res://gwidi_native_module/bin/gwidi_data.gdns" type="Script" id=3]
 
 [node name="MeasureRecyclerListH" type="Node2D"]
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_group_": true
 }
+
+[node name="Gwidi_Data" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [node name="Canvas" type="CanvasLayer" parent="."]
 

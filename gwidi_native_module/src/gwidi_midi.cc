@@ -1,7 +1,8 @@
 #include "gwidi_midi.h"
 #include <sstream>
 
-#include "gwidi/GwidiOptions.h"
+#include "gwidi/gwidi_midi_parser.h"
+#include "gwidi/GwidiOptions2.h"
 #include "gwidi/GwidiTickHandler.h"
 
 #define TEST_FILE R"(/home/zhensley/repos/gwidi_godot/gwidi_midi_parser/assets/moana.mid)"
@@ -34,12 +35,12 @@ void GwidiMidi::importMidi(const char* filename) {
         ss << "Importing MIDI: " << filename;
         Godot::print(ss.str().c_str());
     }
-    auto data = GwidiMidiParser::getInstance().readFile(filename, gwidi::options::MidiParseOptions{
-            gwidi::options::InstrumentOptions::Instrument::HARP
+    auto data = gwidi::midi::GwidiMidiParser::getInstance().readFile(filename, gwidi::midi::MidiParseOptions {
+            gwidi::midi::Instrument(gwidi::midi::Instrument::HARP)
     });
-    auto tickHandler = GwidiTickHandler();
-    tickHandler.setOptions(GwidiTickOptions{
-            GwidiTickOptions::ActionOctaveBehavior::HIGHEST
+    auto tickHandler = gwidi::tick::GwidiTickHandler();
+    tickHandler.setOptions(gwidi::tick::GwidiTickOptions {
+            gwidi::tick::GwidiTickOptions::ActionOctaveBehavior::HIGHEST
     });
     tickHandler.assignData(data);
 

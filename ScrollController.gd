@@ -69,7 +69,7 @@ func _input(event):
 			dragging_start = dragging_current
 			update_scroll()
 
-func _process(delta):
+func _process(_delta):
 	if Input.is_action_pressed("scroll_shift"):
 		var scroll_x_val = 0
 		if Input.is_action_just_released("scroll_right"):

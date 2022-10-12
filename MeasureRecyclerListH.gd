@@ -96,8 +96,6 @@ func bind_node(n, d):
 	n.bind_data(d)
 
 func init_scroll_controller():
-	var vp_size = get_viewport().size
-	
 	$Canvas/Background.update()
 	list_width = $Canvas/Background.rect_size.x
 	var list_height = $Canvas/Background.rect_size.y
@@ -146,7 +144,23 @@ func data_item_for_position(pos):
 # TODO:   - # of measures, instrument config, etc
 # TODO: 2 - parsed midi import data and instrument config
 # TODO: 3 - loaded gwidi data and instrument config
+
+func test_native_data():
+	var gwidi_data = Gwidi_Data.new()
+	gwidi_data.addMeasure()
+	var measureCount = gwidi_data.measureCount()
+	
+	# Grabbing the measure (creating the new obj) is crashing us when it tries to destruct
+	# When the reference is lost in GD, the native obj is destructed
+	var measure = gwidi_data.measureAt(0)
+	var octaves = measure.getOctaves()
+	
+	print("tested!")
+	
 func build_test_data():
+
+	test_native_data()
+	
 	# map[measure] = { octave: [{letter:activated, letter:activated}, {letter:activated, letter:activated}], octave2: etc. }
 	var ret = {}
 	for measure_num in range(0, 8):
@@ -154,7 +168,7 @@ func build_test_data():
 		
 		for octave in range(0, 4):
 			ret[measure_num][octave] = []
-			for time in range (0, 16):
+			for _time in range (0, 16):
 				var time_entry = {}
 				if octave < 3:
 					time_entry = {
