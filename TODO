@@ -1,6 +1,8 @@
 - MADE A GWIDI OPTIONS 2 for json, make a tick processor given the data it defines and the graph here:
 -- https://docs.google.com/drawings/d/1BwVsdqyChWtGXfK3hZLfCVcJpPtFWm9nVPhBDAGs3QM/edit?usp=sharing
 
+- Added GwidiGuiData, just need to hook this up to Godot so that everything can tie together
+
 - Lots of TODOs in the godot project itself, but I think it boils down to a few main things for now:
 -- The building/binding/display of all of the measures/octaves/notes need to be dependent on the currently selected instrument configuration. This means:
 --- Build file selector in godot to pick the config
