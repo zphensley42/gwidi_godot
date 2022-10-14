@@ -7,7 +7,9 @@ const ListNode = preload("res://MeasureListNode.tscn")
 
 # TODO: Need to resize to the viewport size when the viewport size changes
 
-var data_items = []
+var data_items = null
+var data_items_measures = []
+
 var view_items = {}
 export var max_view_items = 4
 var start_data_index = 0
@@ -51,7 +53,7 @@ func check_recycle():
 	# print("first_visible_data_pos: " + str(first_visible_data_pos) + ", last_visible_data_pos: " + str(last_visible_data_pos))
 	
 	for pos in range(first_visible_data_pos, last_visible_data_pos + 1):	# +1 to ensure we always have one after the visual 'end'
-		if pos >= data_items.size() or pos < 0:
+		if pos >= data_items_measures.size() or pos < 0:
 			break
 		
 		var view_pos = pos % view_items.size()
@@ -73,6 +75,7 @@ func check_recycle():
 
 func assign_data(d):
 	data_items = d
+	data_items_measures = data_items.getMeasures()
 	build_nodes()
 
 func build_nodes():
@@ -82,7 +85,8 @@ func build_nodes():
 		c.queue_free()
 		
 	var xpos = 0
-	var item_range = min(max_view_items, data_items.size())
+	var measure_count = data_items_measures.size()
+	var item_range = min(max_view_items, measure_count)
 	for i in item_range:
 		var node = ListNode.instance()
 		node.init(Vector2(xpos, 0), i)
@@ -101,7 +105,8 @@ func init_scroll_controller():
 	var list_height = $Canvas/Background.rect_size.y
 	
 	var dummy = ListNode.instance()
-	$ScrollController.init(dummy, list_offset, list_width, list_height, data_items.size(), self)
+	var data_size = data_items_measures.size()
+	$ScrollController.init(dummy, list_offset, list_width, list_height, data_size, self)
 	measured_node_width = dummy.node_width()
 	dummy.queue_free()
 
@@ -134,10 +139,11 @@ func _on_note_activated(measure, octave, pitch, time):
 	print("\ttime: " + str(time))
 	print("}")
 	
-	data_items[measure][octave][time][pitch] = true 
+	data_items_measures[measure].getOctaves()[octave].getTimes()[time][pitch].toggle()
+	# data_items_measures[measure][octave][time][pitch] = true 
 
 func data_item_for_position(pos):
-	return { "measure": pos, "data": data_items[pos] }
+	return data_items_measures[pos]
 
 # TODO: Actually build this data from a couple of places:
 # TODO: 1 - default, no actual data but instead use a set of params like
@@ -148,18 +154,45 @@ func data_item_for_position(pos):
 func test_native_data():
 	var gwidi_data = Gwidi_Data.new()
 	gwidi_data.addMeasure()
-	var measureCount = gwidi_data.measureCount()
+	var measureCount = gwidi_data.getMeasures().size()
 	
 	# Grabbing the measure (creating the new obj) is crashing us when it tries to destruct
 	# When the reference is lost in GD, the native obj is destructed
-	var measure = gwidi_data.measureAt(0)
+	var measure = gwidi_data.getMeasures()[0]
 	var octaves = measure.getOctaves()
+	var times = octaves[0].getTimes()
+	var notesForTime0 = times[0]
+	var note1 = notesForTime0[0]
+	var note1Letters = note1.getLetters()
 	
 	print("tested!")
 	
 func build_test_data():
 
 	test_native_data()
+	
+	var gwidi_data = Gwidi_Data.new()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	gwidi_data.addMeasure()
+	return gwidi_data
 	
 	# map[measure] = { octave: [{letter:activated, letter:activated}, {letter:activated, letter:activated}], octave2: etc. }
 	var ret = {}

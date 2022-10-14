@@ -14,20 +14,21 @@ var hovered = false
 # This should come from instrument config I guess
 # TODO: An issue with how we draw GUI is that these are displayed in the opposite order
 # TODO: quick-fix is to map them in opposite order here
-var pitches = {
-	"B": 0,
-	"A": 1,
-	"G": 2,
-	"F": 3,
-	"E": 4,
-	"D": 5,
-	"C": 6
+var keys = {
+	"1": 7,
+	"2": 6,
+	"3": 5,
+	"4": 4,
+	"5": 3,
+	"6": 2,
+	"7": 1,
+	"8": 0
 }
 
-func bind_data(measure_num, octave_num, note_time, note_letter, note_act):
+func bind_data(measure_num, octave_num, note_time, note_letter, note_key, note_act):
 	measure = measure_num
 	octave = octave_num
-	pitch = pitches[note_letter]
+	pitch = keys[note_key]
 	letter = note_letter
 	time = note_time
 	activated = note_act
@@ -95,9 +96,9 @@ func _input(event):
 		if event.pressed and event.button_index == BUTTON_RIGHT:
 			activated = !activated
 			event.pressed = false
-			
+			letter
 			if activated:
-				emit_signal("note_activated", measure, octave, letter, time)
+				emit_signal("note_activated", measure, octave, pitch, time)
 			change_draw_state()
 
 func _on_TitleBackground_gui_input(event):
