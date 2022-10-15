@@ -23,7 +23,8 @@ func bind_data(data):
 			var note = Note.instance()
 			$Notes.add_child(note)
 			note.init()
-			note.bind_data(n.measure(), n.octave(), n.time(), n.getLetters()[0], n.key(), n.activated())
+			note.bind_data(n)
+			# note.bind_data(n.measure(), n.octave(), n.time(), n.getLetters()[0], n.key(), n.activated())
 	
 	bind_position()
 

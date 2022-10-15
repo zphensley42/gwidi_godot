@@ -131,16 +131,20 @@ func _ready():
 	
 	init_scroll_controller()
 
-func _on_note_activated(measure, octave, pitch, time):
-	print("_on_note_activated received{")
-	print("\tmeasure: " + str(measure))
-	print("\toctave: " + str(octave))
-	print("\tpitch: " + str(pitch))
-	print("\ttime: " + str(time))
-	print("}")
-	
-	data_items_measures[measure].getOctaves()[octave].getTimes()[time][pitch].toggle()
+#func _on_note_activated(measure, octave, pitch, time):
+#	print("_on_note_activated received{")
+#	print("\tmeasure: " + str(measure))
+#	print("\toctave: " + str(octave))
+#	print("\tpitch: " + str(pitch))
+#	print("\ttime: " + str(time))
+#	print("}")
+#	
+#	data_items.toggleNote()
+#	data_items_measures[measure].getOctaves()[octave].getTimes()[time][pitch].toggle()
 	# data_items_measures[measure][octave][time][pitch] = true 
+
+func _on_note_activated(note):
+	data_items.toggleNote(note)
 
 func data_item_for_position(pos):
 	return data_items_measures[pos]

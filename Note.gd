@@ -11,6 +11,8 @@ var letter = ""
 var activated = false
 var hovered = false
 
+var note_data = null
+
 # This should come from instrument config I guess
 # TODO: An issue with how we draw GUI is that these are displayed in the opposite order
 # TODO: quick-fix is to map them in opposite order here
@@ -25,13 +27,14 @@ var keys = {
 	"8": 0
 }
 
-func bind_data(measure_num, octave_num, note_time, note_letter, note_key, note_act):
-	measure = measure_num
-	octave = octave_num
-	pitch = keys[note_key]
-	letter = note_letter
-	time = note_time
-	activated = note_act
+func bind_data(n):
+	note_data = n
+	measure = n.measure()
+	octave = n.octave()
+	pitch = keys[n.key()]
+	letter = n.getLetters()[0]
+	time = n.time()
+	activated = n.activated()
 	
 	$Title.text = str(pitch) + " " + str(time) + " " + letter
 	change_draw_state()
@@ -96,9 +99,10 @@ func _input(event):
 		if event.pressed and event.button_index == BUTTON_RIGHT:
 			activated = !activated
 			event.pressed = false
-			letter
-			if activated:
-				emit_signal("note_activated", measure, octave, pitch, time)
+			emit_signal("note_activated", note_data)
+			#if activated:
+			#	emit_signal("note_activated", note_data)
+				# emit_signal("note_activated", measure, octave, pitch, time)
 			change_draw_state()
 
 func _on_TitleBackground_gui_input(event):
