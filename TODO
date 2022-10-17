@@ -13,3 +13,7 @@
 -- Options for adding/removing/setting the # of measures currently available
 --- This needs to tie-into the track length in gwidi data itself (tick?)
 -- Once the above 2 things are done, update to use gwidi for the initial data creation and begin adding controls back to gwidi to update the data
+
+
+- IMPORTANT: Rename GwidiData to GwidiMidiData
+
