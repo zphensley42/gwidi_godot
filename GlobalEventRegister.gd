@@ -6,9 +6,26 @@ func _ready():
 
 var notes = []
 var recycler = null
+var scroll_controller = null
+var midi_parser = null
+
+func register_midi_parser(m):
+	midi_parser = m
+
+# Order matters -> nodes earlier in the scene are initialized first, so the midi_parser has to be earlier in the scene
+func register_scroll_controller(s):
+	scroll_controller = s
+	midi_parser.connect("import_opened", scroll_controller, "_on_import_opened")
+	midi_parser.connect("import_closed", scroll_controller, "_on_import_closed")
+	
+func unregister_scroll_controller():
+	scroll_controller = null
 
 func register_recycler(r):
 	recycler = r
+
+func unregister_recycler():
+	recycler = null
 
 func unregister_note(note):
 	var found = notes.find(note)

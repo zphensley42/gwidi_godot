@@ -156,7 +156,7 @@ func data_item_for_position(pos):
 # TODO: 3 - loaded gwidi data and instrument config
 
 func test_native_data():
-	var gwidi_data = Gwidi_Data.new()
+	var gwidi_data = Gwidi_Gui_Data.new()
 	gwidi_data.addMeasure()
 	var measureCount = gwidi_data.getMeasures().size()
 	
@@ -175,7 +175,7 @@ func build_test_data():
 
 	test_native_data()
 	
-	var gwidi_data = Gwidi_Data.new()
+	var gwidi_data = Gwidi_Gui_Data.new()
 	gwidi_data.addMeasure()
 	gwidi_data.addMeasure()
 	gwidi_data.addMeasure()

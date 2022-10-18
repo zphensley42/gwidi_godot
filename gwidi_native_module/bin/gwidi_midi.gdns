@@ -4,5 +4,5 @@
 
 [resource]
 resource_name = "gwidi"
-class_name = "GwidiMidi"
+class_name = "Gwidi_Midi_Parser"
 library = ExtResource( 1 )

@@ -1,5 +1,7 @@
 extends Node
 
+var scrolling_enabled = true
+
 var data_count = 0
 var list_offset = 0
 var list_width = 0
@@ -52,6 +54,9 @@ var is_dragging = false
 var dragging_start = null
 var dragging_current = null
 func _input(event):
+	if not scrolling_enabled:
+		return
+		
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == BUTTON_LEFT:
 			if not is_dragging:
@@ -70,6 +75,9 @@ func _input(event):
 			update_scroll()
 
 func _process(_delta):
+	if not scrolling_enabled:
+		return
+		
 	if Input.is_action_pressed("scroll_shift"):
 		var scroll_x_val = 0
 		if Input.is_action_just_released("scroll_right"):
@@ -93,7 +101,7 @@ func _process(_delta):
 
 func update_scroll():
 	var lw = -(measured_list_width() - list_width)
-	# Clamp our scroll to start/end of the list
+	# Clamp our scroll to start/end of the list_on_import_closed
 	if scroll_x >= list_offset[0]:
 		scroll_x = list_offset[0]
 	elif scroll_x <= lw:
@@ -114,11 +122,19 @@ func update_scroll():
 # END HANDLE SCROLLING AMOUNT
 
 
+func _on_import_opened():
+	print("_on_import_opened")
+	scrolling_enabled = false
+
+func _on_import_closed():
+	print("_on_import_closed")
+	scrolling_enabled = true
+
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	$"/root/GlobalEventRegister".register_scroll_controller(self)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
