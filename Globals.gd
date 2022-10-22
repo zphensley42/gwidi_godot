@@ -12,19 +12,64 @@ const octave_title_height = 20
 
 # per measure
 # TODO: These values should be based on instrument settings I guess?
-const num_pitches = 8
-const num_times = 16
-const num_octaves = 3
+var num_pitches = 8
+var num_times = 16
+var num_octaves = 3
+
+# Build dictionary of size values to use in layout
+# [
+#		octave: num, num_times, num_pitches,
+#		octave: num_times, num_pitches,
+#		octave: num_times, num_pitches
+# ]
+
+var size_constants = []
+
+func calc_size_constants(data):
+	size_constants.clear()
+	
+	var measures = data.getMeasures()
+	
+	var octaves = measures[0].getOctaves()
+	num_octaves = octaves.size()
+	for o in octaves:
+		var times = o.getTimes()
+		var size_constant_octave = {
+			"num": o.num(),
+			"num_times": times.size(),
+			"num_pitches": times[times.keys()[0]].size()
+		}
+		size_constants.append(size_constant_octave)
 
 
 # time-indexing
 const tempo = 60.0
 
+func octave_height(num):
+	return size_constants[num]["num_pitches"] * note_height
+
+# This is confusing to follow, but the key is that we need to reverse the sizes/offsets to match
+# the y-reverse of the display
+# TODO: This should be done more generically to work with different #s of octaves per instrument settings
+func octave_y_offset(num):
+	if num == 0:
+		return octave_height(2) + octave_height(1)
+	elif num == 1:
+		return octave_height(2)
+	elif num == 2:
+		return 0
+	else:
+		return 0
+
+func measure_width():
+	# for now, just assume each measure/octave has the same timing
+	return size_constants[0]["num_times"] * note_width
+
 static func tempo_to_tpq():
 	return 60.0 / tempo	# return seconds per quarter note
 
-static func octave_height():
-	return num_pitches * note_height
+#static func octave_height():
+#	return num_pitches * note_height
 
-static func measure_width():
-	return num_times * note_width
+#static func measure_width():
+#	return num_times * note_width

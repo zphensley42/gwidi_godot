@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Gwidi_Midi_Parser.gd" type="Script" id=1]
 [ext_resource path="res://MeasureRecyclerListH.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Gwidi_Playback.gd" type="Script" id=3]
 
 [node name="Main2" type="Node2D"]
+
+[node name="Gwidi_Playback" type="Node" parent="."]
+script = ExtResource( 3 )
 
 [node name="Gwidi_Midi_Parser" type="Node" parent="."]
 script = ExtResource( 1 )
@@ -20,7 +24,7 @@ margin_left = -389.0
 margin_top = -221.0
 margin_right = 389.0
 margin_bottom = 221.0
-window_title = "Import MIDI File"
+window_title = "Open a File"
 mode = 0
 access = 2
 filters = PoolStringArray( "*.mid" )
@@ -54,8 +58,16 @@ margin_right = 600.0
 margin_bottom = 50.0
 text = "Settings"
 
+[node name="Button_Add_Measure" type="Button" parent="UiCanvasLayer"]
+margin_left = 600.0
+margin_right = 800.0
+margin_bottom = 50.0
+text = "Add Measure"
+
 [connection signal="file_selected" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_file_selected"]
 [connection signal="hide" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_hide"]
 [connection signal="modal_closed" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_modal_closed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Import" to="Gwidi_Midi_Parser" method="_on_Button_Import_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Settings" to="Gwidi_Midi_Parser" method="_on_Button_Settings_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/Button_Add_Measure" to="MeasureRecyclerListH" method="_on_Button_Add_Measure_pressed"]

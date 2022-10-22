@@ -2,6 +2,7 @@ extends Node
 
 signal import_opened
 signal import_closed
+signal data_loaded
 
 export var metaMap = []
 
@@ -15,6 +16,9 @@ func getTrackMeta(filename):
 	metaMap = parser.getTrackMetaMap(filename)
 	print("parsed meta!")
 
+func getMidiData(filename, track_num):
+	var parser = Gwidi_Midi_Parser.new()
+	return parser.importMidi(filename, track_num)
 
 
 func _on_Button_Import_pressed():
@@ -24,7 +28,13 @@ func _on_Button_Import_pressed():
 
 func _on_MidiImportDialog_file_selected(path):
 	print("selected file: " + path)
-	getTrackMeta(path)
+	var trackMeta = getTrackMeta(path)
+	# TODO: Display the meta so that users can pick a track number
+	var midiData = getMidiData(path, 1)
+	print('midi data imported!')
+	
+	GwidiDataManager.assign_data(midiData)
+	emit_signal("data_loaded", midiData)
 
 
 func _on_MidiImportDialog_hide():

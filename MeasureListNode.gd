@@ -47,7 +47,10 @@ func node_width():
 	return Globals.measure_width() + Globals.measure_title_width
 
 func node_height():
-	return Globals.num_octaves * Globals.octave_height()
+	var h = 0
+	for i in range(Globals.num_octaves):
+		h += Globals.octave_height(i)
+	return h
 
 func bind_data(data):
 	measure_num = data.num()

@@ -7,7 +7,6 @@ const ListNode = preload("res://MeasureListNode.tscn")
 
 # TODO: Need to resize to the viewport size when the viewport size changes
 
-var data_items = null
 var data_items_measures = []
 
 var view_items = {}
@@ -21,7 +20,7 @@ var measured_node_width = 0
 export var list_offset = Vector2(0, 0)
 
 func measured_list_width():
-	return measured_node_width * data_items.size()
+	return measured_node_width * get_data_items().size()
 
 var scroll_x = 0
 var scroll_y = 0
@@ -73,10 +72,11 @@ func check_recycle():
 # View items are instantiated based on retrieving a data item for that position
 
 
-func assign_data(d):
-	data_items = d
-	data_items_measures = data_items.getMeasures()
+func refresh_data():
+	Globals.calc_size_constants(get_data_items())
+	data_items_measures = get_data_items().getMeasures()
 	build_nodes()
+	init_scroll_controller()
 
 func build_nodes():
 	view_items.clear()
@@ -127,24 +127,16 @@ func _ready():
 	$Canvas/Background.margin_top = list_offset[1]
 	
 	var d = build_test_data()
-	assign_data(d)
+	GwidiDataManager.assign_data(d)
+	refresh_data()
 	
 	init_scroll_controller()
 
-#func _on_note_activated(measure, octave, pitch, time):
-#	print("_on_note_activated received{")
-#	print("\tmeasure: " + str(measure))
-#	print("\toctave: " + str(octave))
-#	print("\tpitch: " + str(pitch))
-#	print("\ttime: " + str(time))
-#	print("}")
-#	
-#	data_items.toggleNote()
-#	data_items_measures[measure].getOctaves()[octave].getTimes()[time][pitch].toggle()
-	# data_items_measures[measure][octave][time][pitch] = true 
-
 func _on_note_activated(note):
-	data_items.toggleNote(note)
+	get_data_items().toggleNote(note)
+	
+func _on_data_loaded(d):
+	refresh_data()
 
 func data_item_for_position(pos):
 	return data_items_measures[pos]
@@ -171,55 +163,15 @@ func test_native_data():
 	
 	print("tested!")
 	
+func get_data_items():
+	return GwidiDataManager.get_assigned_data()
+	
 func build_test_data():
 
 	test_native_data()
-	
 	var gwidi_data = Gwidi_Gui_Data.new()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
-	gwidi_data.addMeasure()
 	return gwidi_data
-	
-	# map[measure] = { octave: [{letter:activated, letter:activated}, {letter:activated, letter:activated}], octave2: etc. }
-	var ret = {}
-	for measure_num in range(0, 8):
-		ret[measure_num] = {}
-		
-		for octave in range(0, 4):
-			ret[measure_num][octave] = []
-			for _time in range (0, 16):
-				var time_entry = {}
-				if octave < 3:
-					time_entry = {
-						"C": false,
-						"D": false,
-						"E": false,
-						"F": false,
-						"G": false,
-						"A": false,
-						"B": false,
-					}
-				else:
-					time_entry = {
-						"C": false,
-					}
-				ret[measure_num][octave].append(time_entry)
-	return ret
+
+func _on_Button_Add_Measure_pressed():
+	get_data_items().addMeasure()
+	refresh_data()

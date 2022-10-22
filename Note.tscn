@@ -7,9 +7,16 @@ script = ExtResource( 1 )
 
 [node name="VisNotifier" type="VisibilityNotifier2D" parent="."]
 
-[node name="TitleBackground" type="ColorRect" parent="."]
+[node name="Stroke" type="ColorRect" parent="."]
 margin_right = 100.0
 margin_bottom = 20.0
+color = Color( 0, 0, 0, 1 )
+
+[node name="TitleBackground" type="ColorRect" parent="."]
+margin_left = 1.0
+margin_top = 1.0
+margin_right = 99.0
+margin_bottom = 19.0
 mouse_filter = 1
 color = Color( 0.717647, 0.745098, 0.823529, 1 )
 

@@ -27,11 +27,12 @@ var keys = {
 	"8": 0
 }
 
-func bind_data(n):
+func bind_data(n, index):
 	note_data = n
 	measure = n.measure()
 	octave = n.octave()
-	pitch = keys[n.key()]
+	#pitch = keys[n.key()]
+	pitch = index
 	letter = n.getLetters()[0]
 	time = n.time()
 	activated = n.activated()
@@ -42,12 +43,15 @@ func bind_data(n):
 	bind_position()
 
 func bind_position():
+	# TODO: Fix this -- we have gaps in our display now because of mismatched # of pitches in our octaves
 	position = Vector2(Globals.note_width * time, Globals.note_height * pitch)
 
 func init():
 	bind_position()
-	$TitleBackground.margin_right = Globals.note_width
-	$TitleBackground.margin_bottom = Globals.note_height
+	$TitleBackground.margin_right = Globals.note_width - 1
+	$TitleBackground.margin_bottom = Globals.note_height - 1
+	$Stroke.margin_right = Globals.note_width
+	$Stroke.margin_bottom = Globals.note_height
 	$Title.margin_right = Globals.note_width
 	$Title.margin_bottom = Globals.note_height
 	

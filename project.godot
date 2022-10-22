@@ -18,6 +18,7 @@ config/icon="res://icon.png"
 
 Globals="*res://Globals.gd"
 GlobalEventRegister="*res://GlobalEventRegister.gd"
+GwidiDataManager="*res://GwidiDataManager.gd"
 
 [display]
 

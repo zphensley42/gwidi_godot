@@ -23,8 +23,10 @@ func unregister_scroll_controller():
 
 func register_recycler(r):
 	recycler = r
+	midi_parser.connect("data_loaded", recycler, "_on_data_loaded")
 
 func unregister_recycler():
+	midi_parser.disconnect("data_loaded", recycler, "_on_data_loaded")
 	recycler = null
 
 func unregister_note(note):
