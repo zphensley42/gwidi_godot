@@ -1,10 +1,8 @@
-- MADE A GWIDI OPTIONS 2 for json, make a tick processor given the data it defines and the graph here:
--- https://docs.google.com/drawings/d/1BwVsdqyChWtGXfK3hZLfCVcJpPtFWm9nVPhBDAGs3QM/edit?usp=sharing
+NEW IMPORTANT ONE: Fix inefficiency with play -> new playback in Godot project, specifically this breaks Pause but also is needed for Play to work with Gui data. Remove the tickmap stuff and just use the data directly??
 
-- Added GwidiGuiData, just need to hook this up to Godot so that everything can tie together
+
 
 - Lots of TODOs in the godot project itself, but I think it boils down to a few main things for now:
--- The building/binding/display of all of the measures/octaves/notes need to be dependent on the currently selected instrument configuration. This means:
 --- Build file selector in godot to pick the config
 --- Parse config after selected (in gwidi_options)
 --- Provide parsed config from gwidi_options back to godot script
@@ -14,6 +12,4 @@
 --- This needs to tie-into the track length in gwidi data itself (tick?)
 -- Once the above 2 things are done, update to use gwidi for the initial data creation and begin adding controls back to gwidi to update the data
 
-
-- IMPORTANT: Rename GwidiData to GwidiMidiData
 

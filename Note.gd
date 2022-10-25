@@ -10,6 +10,8 @@ var letter = ""
 
 var activated = false
 var hovered = false
+var played = false
+var played_time = false
 
 var note_data = null
 
@@ -80,7 +82,9 @@ func _on_TitleBackground_mouse_exited():
 	change_draw_state()
 
 func change_draw_state():
-	if hovered and activated:
+	if played:
+		$TitleBackground.color = Color.blue
+	elif hovered and activated:
 		$TitleBackground.color = Color("f45712")
 	elif hovered:
 		$TitleBackground.color = Color.darkturquoise
@@ -112,3 +116,40 @@ func _input(event):
 func _on_TitleBackground_gui_input(event):
 	pass
 
+func comp_offsets(a, b, epsilon):
+	return abs(a - b) <= epsilon
+
+var played_timer = null
+func _on_note_playback(n):
+	var offset = n["start_offset"]
+	# we need to convert our note's time to an offset that is comparable to the above
+	var our_offset = (Globals.measure_time() * measure) + (time * Globals.sixteenthNoteTPQ())
+	
+	var offsets_match = comp_offsets(offset, our_offset, 0.01)
+	
+	if offsets_match and n["octave"] == note_data.octave() and n["key"] == note_data.key():
+		played = true
+		change_draw_state()
+		
+		played_timer = Timer.new()
+		add_child(played_timer)
+		played_timer.one_shot = true
+		played_timer.connect("timeout", self, "_on_played_timer_timeout")
+		played_timer.start(0.25)
+		print("_on_note_playback started timer")
+
+func _on_played_timer_timeout():
+	played = false
+	change_draw_state()
+	print("_on_note_playback timer finished")
+	remove_child(played_timer)
+
+var cached_num_times = null
+func _on_playback_time(indexedTimeOffset, indexedTime):
+	if cached_num_times == null:
+		cached_num_times = Globals.get_sizeconstants_numtimes()
+	played_time = indexedTime == ((measure * cached_num_times) + time)
+	if played_time:
+		$Stroke.color = Color.green
+	else:
+		$Stroke.color = Color.black

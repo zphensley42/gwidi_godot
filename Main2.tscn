@@ -46,25 +46,43 @@ margin_bottom = 50.0
 color = Color( 0.168627, 0.168627, 0.168627, 1 )
 
 [node name="Button_Import" type="Button" parent="UiCanvasLayer"]
-margin_right = 200.0
+margin_right = 100.0
 margin_bottom = 50.0
 text = "Import"
 
-[node name="Button_Play" type="Button" parent="UiCanvasLayer"]
+[node name="Button_Load" type="Button" parent="UiCanvasLayer"]
+margin_left = 100.0
+margin_right = 200.0
+margin_bottom = 50.0
+text = "Load"
+
+[node name="Button_Save" type="Button" parent="UiCanvasLayer"]
 margin_left = 200.0
-margin_right = 400.0
+margin_right = 300.0
+margin_bottom = 50.0
+text = "Save"
+
+[node name="Button_Play" type="Button" parent="UiCanvasLayer"]
+margin_left = 400.0
+margin_right = 500.0
 margin_bottom = 50.0
 text = "Play"
 
-[node name="Button_Settings" type="Button" parent="UiCanvasLayer"]
-margin_left = 400.0
+[node name="Button_Stop" type="Button" parent="UiCanvasLayer"]
+margin_left = 500.0
 margin_right = 600.0
+margin_bottom = 50.0
+text = "Stop"
+
+[node name="Button_Settings" type="Button" parent="UiCanvasLayer"]
+margin_left = 800.0
+margin_right = 900.0
 margin_bottom = 50.0
 text = "Settings"
 
 [node name="Button_Add_Measure" type="Button" parent="UiCanvasLayer"]
-margin_left = 600.0
-margin_right = 800.0
+margin_left = 900.0
+margin_right = 1024.0
 margin_bottom = 50.0
 text = "Add Measure"
 
@@ -73,5 +91,6 @@ text = "Add Measure"
 [connection signal="modal_closed" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_modal_closed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Import" to="Gwidi_Midi_Parser" method="_on_Button_Import_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/Button_Stop" to="Gwidi_Playback" method="_on_Button_Stop_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Settings" to="Gwidi_Midi_Parser" method="_on_Button_Settings_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Add_Measure" to="MeasureRecyclerListH" method="_on_Button_Add_Measure_pressed"]

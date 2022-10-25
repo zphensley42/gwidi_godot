@@ -45,3 +45,5 @@ func register_note(note):
 	
 	notes.append(note)
 	note.connect("note_activated", recycler, "_on_note_activated")
+	data_manager.connect("playback_scroll", note, "_on_playback_time")
+	data_manager.connect("playback_note", note, "_on_note_playback")

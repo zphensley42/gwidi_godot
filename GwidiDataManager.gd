@@ -1,10 +1,30 @@
 extends Node
 
 signal playback_scroll
+signal playback_note
+signal playback_ended
 
 var assigned_data = null
 var playback = null
 var sample_manager = null
+
+var playback_lock = Mutex.new()
+func assign_playback(p):
+	playback_lock.lock()
+	playback = p
+	playback_lock.unlock()
+
+func clear_playback():
+	playback_lock.lock()
+	playback = null
+	playback_lock.unlock()
+
+func call_playback_func(f):
+	if !f.is_valid():
+		return
+	playback_lock.lock()
+	f.call_func()
+	playback_lock.unlock()
 
 func register_sample_manager(sm):
 	sample_manager = sm
@@ -51,13 +71,38 @@ func data_playback_tick(time):
 	# THIS WORKED :)
 	call_deferred("emit_signal", "playback_scroll", indexedTimeOffset, indexedTime)
 
+# TODO: There is an issue with our first delay
+# TODO: If there is a bunch of silence at the beginning, the notes we get back
+# TODO: seem to ignore it, instead 'flooring' the first note even if we aren't at that time yet
 func notes_playback(notes):
 	print("notes_playback, size: " + str(notes.size()))
 	if(sample_manager):
 		for note in notes:
 			sample_manager.play_sample_for_note(note)
+			
+			# emit the note we are playing to update its view on screen
+			# a hack to make this quicker is to just emit note data that each note
+			# listens for and have the notes treat it as a temporary state
+			# the notes can draw the temporary state per their own timers
+			# before clearing it
+			call_deferred("emit_signal", "playback_note", note)
+
+func playback_ended():
+	print("playback ended")
+	# clear_playback()
+	call_deferred("emit_signal", "playback_scroll", 0, 0)
+	call_deferred("emit_signal", "playback_ended")
 
 func playback_play():
+	# TODO: This works but it is slow, see my comments below
+	# In general, having to assign this stuff on play makes it feel even slower
+	# because we end up waiting here until it is complete to actually begin playing back
+	#var pb = Gwidi_Gui_Playback.new()
+	#pb.assignInstrument("harp")
+	#assign_playback(pb)
+	# IMPORTANT TODO: IT BREAKS PAUSE FUNCTIONALITY to reset this every time we play
+	# IMPORTANT TODO: Need to fix this inefficiency in order to have a function play/pause as expected!!!
+	
 	if playback != null:
 		# For now, update our playback here since changes after-the-fact are not represented
 		# by the TickHandler's tick map, which is only built when assigned data directly
@@ -75,20 +120,30 @@ func playback_play():
 		var play_cb = funcref(self, 'notes_playback')
 		playback.assignPlayCallbackFn(play_cb)
 		
+		var ended_cb = funcref(self, 'playback_ended')
+		playback.assignPlayEndedFn(ended_cb)
+		
 		# for testing
 		playback.setRealInput(false)
 		
-		playback.play()
+		var f = funcref(playback, "play")
+		call_playback_func(f)
 
 func playback_pause():
-	if playback != null:
-		playback.pause()
+	var f = funcref(playback, "pause")
+	call_playback_func(f)
+
+func playback_stop():
+	var f = funcref(playback, "stop")
+	call_playback_func(f)
 
 # TODO: Hook this up to GUI data, not just from the import
 func assign_data(d):
 	assigned_data = d
-	playback = Gwidi_Gui_Playback.new()
-	playback.assignInstrument("harp")
+	
+	var pb = Gwidi_Gui_Playback.new()
+	pb.assignInstrument("harp")
+	assign_playback(pb)
 
 func get_assigned_data():
 	return assigned_data

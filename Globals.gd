@@ -7,7 +7,7 @@ const block_height = 40
 # new
 const note_width = 70
 const note_height = 30
-const measure_title_width = 80
+const measure_title_width = 50
 const octave_title_height = 20
 
 # per measure

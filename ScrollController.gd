@@ -137,6 +137,7 @@ func _on_import_closed():
 	scrolling_enabled = true
 
 func _on_playback_scroll(indexedTimeOffset, indexedTime):
+	print("_on_playback_scroll(" + str(indexedTimeOffset) + ", " + str(indexedTime) + ")")
 	# indexedTime can be used to help display which notes are playing (probably not from scroll controller though)
 	scroll_x = -indexedTimeOffset
 	update_scroll()

@@ -2,6 +2,7 @@ extends Node
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	GwidiDataManager.connect("playback_ended", self, "_on_playback_ended")
 	pass # Replace with function body.
 
 # 0 = stopped, 1 = play, 2 == pause
@@ -22,3 +23,11 @@ func update_play_button():
 		get_node("../UiCanvasLayer/Button_Play").text = "Pause"
 	elif play_state == 0 or play_state == 2:
 		get_node("../UiCanvasLayer/Button_Play").text = "Play"
+
+
+func _on_Button_Stop_pressed():
+	GwidiDataManager.playback_stop()
+
+func _on_playback_ended():
+	play_state = 0
+	update_play_button()
