@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/e5.mp3-322e8ff0c14659f5badc0aa6b305fa29.mp3str"
+
+[deps]
+
+source_file="res://samples/piano/e5.mp3"
+dest_files=[ "res://.import/e5.mp3-322e8ff0c14659f5badc0aa6b305fa29.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

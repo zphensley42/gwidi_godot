@@ -4,6 +4,10 @@ signal playback_scroll
 
 var assigned_data = null
 var playback = null
+var sample_manager = null
+
+func register_sample_manager(sm):
+	sample_manager = sm
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -16,24 +20,19 @@ func data_playback_tick(time):
 	# 1 - convert the width of the measure into time
 	# 2 - convert the time input to a percentage of this width
 	# 3 - finally, get the real value of the width from this percentage to use as scroll_x
-	var measureTime = Globals.measure_time()
-	var timeInMeasure = fmod(time, measureTime)
-	var pctOfMeasure = timeInMeasure / measureTime
-	var numMeasureInTime = floor(time / measureTime)
+	#var measureTime = Globals.measure_time()
+	#var timeInMeasure = fmod(time, measureTime)
+	#var pctOfMeasure = timeInMeasure / measureTime
+	#var numMeasureInTime = floor(time / measureTime)
 	
-	var measureWidth = Globals.measure_width()
-	var pctOfMeasureInWidth = measureWidth * pctOfMeasure
-	var totalScrollInWidth = pctOfMeasureInWidth + (numMeasureInTime * measureWidth)
-	print("data_playback_tick(" + str(time) + ")")
-	print("\tmeasureTime: " + str(measureTime))
-	print("\tpctOfMeasure: " + str(pctOfMeasure))
-	print("\tmeasureWidth: " + str(measureWidth))
-	print("\tpctOfMeasureInWidth: " + str(pctOfMeasureInWidth))
-	
-	var indexedTime = floor(time / Globals.sixteenthNoteTPQ())
-	var numTitles = floor(indexedTime / Globals.get_sizeconstants_numtimes()) + 1	# +1 for the starting title
-	var indexedTimeOffset = (indexedTime * Globals.note_width) + (numTitles * Globals.measure_title_width)
-	
+	#var measureWidth = Globals.measure_width()
+	#var pctOfMeasureInWidth = measureWidth * pctOfMeasure
+	#var totalScrollInWidth = pctOfMeasureInWidth + (numMeasureInTime * measureWidth)
+	#print("data_playback_tick(" + str(time) + ")")
+	#print("\tmeasureTime: " + str(measureTime))
+	#print("\tpctOfMeasure: " + str(pctOfMeasure))
+	#print("\tmeasureWidth: " + str(measureWidth))
+	#print("\tpctOfMeasureInWidth: " + str(pctOfMeasureInWidth))
 	
 	# So, THIS WORKS --- BUTTTTT
 	# It doesn't take into account titles or anything else in the horizontal scroll pane
@@ -44,10 +43,19 @@ func data_playback_tick(time):
 	#   - this could work to help display which 'time' is being played currently
 	#call_deferred("emit_signal", "playback_scroll", totalScrollInWidth) 
 	
+	var indexedTime = floor(time / Globals.sixteenthNoteTPQ())
+	var numTitles = floor(indexedTime / Globals.get_sizeconstants_numtimes()) + 1	# +1 for the starting title
+	var indexedTimeOffset = (indexedTime * Globals.note_width) + (numTitles * Globals.measure_title_width)
 	
-	# THIS WOKRED :)
-	call_deferred("emit_signal", "playback_scroll", indexedTimeOffset, indexedTime) 
 	
+	# THIS WORKED :)
+	call_deferred("emit_signal", "playback_scroll", indexedTimeOffset, indexedTime)
+
+func notes_playback(notes):
+	print("notes_playback, size: " + str(notes.size()))
+	if(sample_manager):
+		for note in notes:
+			sample_manager.play_sample_for_note(note)
 
 func playback_play():
 	if playback != null:
@@ -61,12 +69,14 @@ func playback_play():
 		playback.assignData(assigned_data, 1)
 		
 		# required after we assign data
-		var cb = funcref(self,'data_playback_tick')
+		var cb = funcref(self, 'data_playback_tick')
 		playback.assignTickCallbackFn(cb)
 		
-		# for testing
-		playback.setRealInput(true)
+		var play_cb = funcref(self, 'notes_playback')
+		playback.assignPlayCallbackFn(play_cb)
 		
+		# for testing
+		playback.setRealInput(false)
 		
 		playback.play()
 

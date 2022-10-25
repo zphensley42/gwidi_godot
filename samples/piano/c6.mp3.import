@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/c6.mp3-56ad45981b38ea98154edf146de5e301.mp3str"
+
+[deps]
+
+source_file="res://samples/piano/c6.mp3"
+dest_files=[ "res://.import/c6.mp3-56ad45981b38ea98154edf146de5e301.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

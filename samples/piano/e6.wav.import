@@ -1,0 +1,23 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/e6.wav-647a29ea9a330b0a0940e220f73bfbbb.sample"
+
+[deps]
+
+source_file="res://samples/piano/e6.wav"
+dest_files=[ "res://.import/e6.wav-647a29ea9a330b0a0940e220f73bfbbb.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=0
