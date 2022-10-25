@@ -5,8 +5,8 @@ const block_width = 80
 const block_height = 40
 
 # new
-const note_width = 80
-const note_height = 40
+const note_width = 70
+const note_height = 30
 const measure_title_width = 80
 const octave_title_height = 20
 
@@ -23,12 +23,16 @@ var num_octaves = 3
 #		octave: num_times, num_pitches
 # ]
 
+# time-indexing
+var tempo = 60.0
+
 var size_constants = []
 
 func calc_size_constants(data):
 	size_constants.clear()
 	
 	var measures = data.getMeasures()
+	tempo = data.tempo()
 	
 	var octaves = measures[0].getOctaves()
 	num_octaves = octaves.size()
@@ -41,9 +45,6 @@ func calc_size_constants(data):
 		}
 		size_constants.append(size_constant_octave)
 
-
-# time-indexing
-const tempo = 60.0
 
 func octave_height(num):
 	return size_constants[num]["num_pitches"] * note_height
@@ -65,8 +66,16 @@ func measure_width():
 	# for now, just assume each measure/octave has the same timing
 	return size_constants[0]["num_times"] * note_width
 
-static func tempo_to_tpq():
-	return 60.0 / tempo	# return seconds per quarter note
+# yeah yeah, this generic conversion makes no sense directly using sixteenthNotes b/c it implies num_times is 16
+# oh well, for now
+func measure_time():
+	return size_constants[0]["num_times"] * sixteenthNoteTPQ() 
+
+func sixteenthNoteTPQ():
+	return 15 / tempo
+
+func get_sizeconstants_numtimes():
+	return size_constants[0]["num_times"]
 
 #static func octave_height():
 #	return num_pitches * note_height

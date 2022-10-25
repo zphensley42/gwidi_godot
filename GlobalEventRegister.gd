@@ -8,6 +8,10 @@ var notes = []
 var recycler = null
 var scroll_controller = null
 var midi_parser = null
+var data_manager = null
+
+func register_data_manager(d):
+	data_manager = d
 
 func register_midi_parser(m):
 	midi_parser = m
@@ -17,6 +21,7 @@ func register_scroll_controller(s):
 	scroll_controller = s
 	midi_parser.connect("import_opened", scroll_controller, "_on_import_opened")
 	midi_parser.connect("import_closed", scroll_controller, "_on_import_closed")
+	data_manager.connect("playback_scroll", scroll_controller, "_on_playback_scroll")
 	
 func unregister_scroll_controller():
 	scroll_controller = null

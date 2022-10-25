@@ -14,6 +14,7 @@ var scroll_callback = null
 var scroll_mult = 10
 var scroll_x = 0
 var scroll_y = 0
+var scroll_y_enabled = true
 
 func measured_list_width():
 	return measured_node_width * data_count
@@ -33,6 +34,7 @@ func init(dummy_node, lo, lw, lh, dc, scroll_cb):
 	
 	measured_node_width = dummy_node.node_width()
 	measured_node_height = dummy_node.node_height()
+	scroll_y_enabled = measured_node_height > list_height # don't allow y scrolling if we don't need it
 	
 	scroll_callback = scroll_cb
 	
@@ -69,7 +71,8 @@ func _input(event):
 		if is_dragging:
 			dragging_current = event.position
 			var diff = dragging_start - dragging_current
-			scroll_y -= diff.y
+			if scroll_y_enabled:
+				scroll_y -= diff.y
 			scroll_x -= diff.x
 			dragging_start = dragging_current
 			update_scroll()
@@ -89,6 +92,8 @@ func _process(_delta):
 			scroll_x += scroll_x_val * scroll_mult
 			update_scroll()
 	else:
+		if !scroll_y_enabled:
+			return
 		var scroll_y_val = 0
 		if Input.is_action_just_released("scroll_right"):
 			scroll_y_val = -1
@@ -101,13 +106,14 @@ func _process(_delta):
 
 func update_scroll():
 	var lw = -(measured_list_width() - list_width)
-	# Clamp our scroll to start/end of the list_on_import_closed
+	# Clamp our scroll to start/end of the list
 	if scroll_x >= list_offset[0]:
 		scroll_x = list_offset[0]
 	elif scroll_x <= lw:
 		scroll_x = lw
 	
-	var lh = -(measured_list_height() - list_height)
+	var mlh = measured_list_height() # measured list height == total size of the data to show
+	var lh = -(mlh - list_height)  # list height == size of the list background on the screen
 	# Clamp our scroll to start/end of the list
 	if scroll_y >= list_offset[1]:
 		scroll_y = list_offset[1]
@@ -130,6 +136,10 @@ func _on_import_closed():
 	print("_on_import_closed")
 	scrolling_enabled = true
 
+func _on_playback_scroll(indexedTimeOffset, indexedTime):
+	# indexedTime can be used to help display which notes are playing (probably not from scroll controller though)
+	scroll_x = -indexedTimeOffset
+	update_scroll()
 
 
 # Called when the node enters the scene tree for the first time.
