@@ -23,6 +23,8 @@ func update_play_button():
 		get_node("../UiCanvasLayer/Button_Play").text = "Pause"
 	elif play_state == 0 or play_state == 2:
 		get_node("../UiCanvasLayer/Button_Play").text = "Play"
+	
+	get_node("/root/Main2/UiCanvasLayer/Button_Add_Measure").disabled = (play_state == 1)
 
 
 func _on_Button_Stop_pressed():
@@ -31,3 +33,15 @@ func _on_Button_Stop_pressed():
 func _on_playback_ended():
 	play_state = 0
 	update_play_button()
+
+
+func _on_Button_Clear_pressed():
+	# TODO: Clear everything thing and start anew
+	pass # Replace with function body.
+
+
+func _on_Button_Add_Measure_pressed():
+	# TODO: Probably disable this if we are playing (it does work, but there are some thread locking concerns)
+	if play_state != 1:
+		var n = get_node("/root/Main2/MeasureRecyclerListH")
+		n.addMeasure()

@@ -111,17 +111,17 @@ func playback_play():
 		# TODO: Perhaps just find a way to use gui data directly instead of the tick wrapper types?
 		
 		# 0 = lowest, 1 = highest, 2 = most
-		playback.assignData(assigned_data, 1)
+		# playback.assignData(assigned_data, 1)
 		
 		# required after we assign data
-		var cb = funcref(self, 'data_playback_tick')
-		playback.assignTickCallbackFn(cb)
+		#var cb = funcref(self, 'data_playback_tick')
+		#playback.assignTickCallbackFn(cb)
 		
-		var play_cb = funcref(self, 'notes_playback')
-		playback.assignPlayCallbackFn(play_cb)
+		#var play_cb = funcref(self, 'notes_playback')
+		#playback.assignPlayCallbackFn(play_cb)
 		
-		var ended_cb = funcref(self, 'playback_ended')
-		playback.assignPlayEndedFn(ended_cb)
+		#var ended_cb = funcref(self, 'playback_ended')
+		#playback.assignPlayEndedFn(ended_cb)
 		
 		# for testing
 		playback.setRealInput(false)
@@ -144,6 +144,19 @@ func assign_data(d):
 	var pb = Gwidi_Gui_Playback.new()
 	pb.assignInstrument("harp")
 	assign_playback(pb)
+	
+	# 0 = lowest, 1 = highest, 2 = most
+	playback.assignData(assigned_data, 1)
+	
+	# required after we assign data
+	var cb = funcref(self, 'data_playback_tick')
+	playback.assignTickCallbackFn(cb)
+	
+	var play_cb = funcref(self, 'notes_playback')
+	playback.assignPlayCallbackFn(play_cb)
+	
+	var ended_cb = funcref(self, 'playback_ended')
+	playback.assignPlayEndedFn(ended_cb)
 
 func get_assigned_data():
 	return assigned_data

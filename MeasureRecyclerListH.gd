@@ -172,6 +172,8 @@ func build_test_data():
 	var gwidi_data = Gwidi_Gui_Data.new()
 	return gwidi_data
 
-func _on_Button_Add_Measure_pressed():
+func addMeasure():
+	# TODO: Profile this, but I'm pretty sure refresh_data() just takes too long
+	# TODO: If we can't address that, add a spinner?
 	get_data_items().addMeasure()
 	refresh_data()
