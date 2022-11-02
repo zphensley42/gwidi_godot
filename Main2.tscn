@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Gwidi_Midi_Parser.gd" type="Script" id=1]
 [ext_resource path="res://MeasureRecyclerListH.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Gwidi_Playback.gd" type="Script" id=3]
 [ext_resource path="res://SampleManager.gd" type="Script" id=4]
+[ext_resource path="res://Gwidi_Hotkey.gd" type="Script" id=5]
 
 [node name="Main2" type="Node2D"]
 
@@ -33,6 +34,9 @@ mode = 0
 access = 2
 filters = PoolStringArray( "*.mid" )
 show_hidden_files = true
+
+[node name="Gwidi_Hotkey" type="Node" parent="."]
+script = ExtResource( 5 )
 
 [node name="MeasureRecyclerListH" parent="." instance=ExtResource( 2 )]
 position = Vector2( 0, 50 )
@@ -96,6 +100,7 @@ text = "Add Measure"
 [connection signal="hide" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_hide"]
 [connection signal="modal_closed" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_modal_closed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Import" to="Gwidi_Midi_Parser" method="_on_Button_Import_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/Button_Load" to="Gwidi_Hotkey" method="_on_Button_Load_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button Clear" to="Gwidi_Playback" method="_on_Button_Clear_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Stop" to="Gwidi_Playback" method="_on_Button_Stop_pressed"]
