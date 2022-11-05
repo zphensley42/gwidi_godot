@@ -1,5 +1,7 @@
 extends Node
 
+const HotkeySettings = preload("res://scenes/HotkeySettings.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GwidiDataManager.connect("playback_ended", self, "_on_playback_ended")
@@ -45,3 +47,10 @@ func _on_Button_Add_Measure_pressed():
 	if play_state != 1:
 		var n = get_node("/root/Main2/MeasureRecyclerListH")
 		n.addMeasure()
+
+
+func _on_Button_Settings_pressed():
+	var settings = HotkeySettings.instance()
+	$"/root/Main2/UiCanvasLayer".add_child(settings)
+	settings.popup_centered()
+	settings.show()

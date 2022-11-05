@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Gwidi_Midi_Parser.gd" type="Script" id=1]
-[ext_resource path="res://MeasureRecyclerListH.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scenes/MeasureRecyclerListH.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Gwidi_Playback.gd" type="Script" id=3]
 [ext_resource path="res://SampleManager.gd" type="Script" id=4]
 [ext_resource path="res://Gwidi_Hotkey.gd" type="Script" id=5]
@@ -104,5 +104,5 @@ text = "Add Measure"
 [connection signal="pressed" from="UiCanvasLayer/Button Clear" to="Gwidi_Playback" method="_on_Button_Clear_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Stop" to="Gwidi_Playback" method="_on_Button_Stop_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Settings" to="Gwidi_Midi_Parser" method="_on_Button_Settings_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/Button_Settings" to="Gwidi_Playback" method="_on_Button_Settings_pressed"]
 [connection signal="pressed" from="UiCanvasLayer/Button_Add_Measure" to="Gwidi_Playback" method="_on_Button_Add_Measure_pressed"]

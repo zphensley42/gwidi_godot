@@ -1,6 +1,6 @@
 extends Node2D
 
-const Note = preload("res://Note.tscn")
+const Note = preload("res://scenes/Note.tscn")
 
 var measure_num = 0
 var octave_num = 0

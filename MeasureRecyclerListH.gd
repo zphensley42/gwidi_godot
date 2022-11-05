@@ -1,6 +1,6 @@
 extends Node
 
-const ListNode = preload("res://MeasureListNode.tscn")
+const ListNode = preload("res://scenes/MeasureListNode.tscn")
 
 # TODO: Attempt to use this implementation of a list with nodes as the holder of measures
 # TODO: Each measure is a node in the list, should help us re-use nodes for large datasets

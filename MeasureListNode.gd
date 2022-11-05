@@ -1,6 +1,6 @@
 extends Node2D
 
-const Octave = preload("res://Octave.tscn")
+const Octave = preload("res://scenes/Octave.tscn")
 
 var is_visible = false
 var data_pos = null
