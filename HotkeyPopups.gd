@@ -15,6 +15,10 @@ func show_enter_keys():
 func _ready():
 	show_popup()
 	
+	# TODO: Fill the hotkey values from ones already stored in the hotkey config
+	# TODO: Updating already works, just need to show the initial values
+	# TODO: When loading hotkeys, need to assign the functions
+	
 	var items_container = $SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer
 	for child in items_container.get_children():
 		if child.name == "ColumnTitles":
@@ -31,7 +35,8 @@ func _ready():
 
 func _on_inputdialog_ok():
 	$KeyInputDialog.hide()
-	var keys = $Hotkey_Assignment_Listener.stop_listening()
+	var item_name = selected_item.hotkey_name
+	var keys = $Hotkey_Assignment_Listener.stop_listening(item_name, true)
 	selected_item.get_node("HBoxContainer/KeyList").text = build_key_str(keys)
 	selected_item = null
 	$KeyInputDialog/MarginContainer/PanelContainer/VBoxContainer/InputKeys.text = ""
@@ -39,7 +44,7 @@ func _on_inputdialog_ok():
 
 func _on_inputdialog_cancel():
 	$KeyInputDialog.hide()
-	$Hotkey_Assignment_Listener.stop_listening()
+	$Hotkey_Assignment_Listener.stop_listening("", false)
 	selected_item = null
 	$KeyInputDialog/MarginContainer/PanelContainer/VBoxContainer/InputKeys.text = ""
 

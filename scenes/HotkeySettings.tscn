@@ -1,8 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Hotkey_Assignment_Listener.gd" type="Script" id=1]
 [ext_resource path="res://fonts/Xolonium-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://HotkeyPopups.gd" type="Script" id=3]
+[ext_resource path="res://scenes/HotkeyFunction.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Hotkey_Item.gd" type="Script" id=5]
 
 [sub_resource type="StyleBoxFlat" id=1]
 bg_color = Color( 0.501961, 0.560784, 0.694118, 1 )
@@ -99,6 +101,8 @@ margin_right = 460.0
 margin_bottom = 54.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 3 )
+script = ExtResource( 5 )
+hotkey_name = "play_pause"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer/Hotkey_PlayPause"]
 margin_right = 460.0
@@ -137,12 +141,17 @@ size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "Set Hotkey"
 
+[node name="HotkeyFunction" parent="SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer/Hotkey_PlayPause/HBoxContainer" instance=ExtResource( 4 )]
+hotkeySignal = "PlayPause"
+
 [node name="Hotkey_Stop" type="PanelContainer" parent="SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer"]
 margin_top = 58.0
 margin_right = 460.0
 margin_bottom = 86.0
 size_flags_horizontal = 3
 custom_styles/panel = SubResource( 3 )
+script = ExtResource( 5 )
+hotkey_name = "stop"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer/Hotkey_Stop"]
 margin_right = 460.0
@@ -180,6 +189,9 @@ margin_bottom = 28.0
 size_flags_horizontal = 3
 custom_fonts/font = SubResource( 4 )
 text = "Set Hotkey"
+
+[node name="HotkeyFunction" parent="SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer/Hotkey_Stop/HBoxContainer" instance=ExtResource( 4 )]
+hotkeySignal = "Stop"
 
 [node name="KeyInputDialog" type="PopupDialog" parent="."]
 margin_right = 40.0
