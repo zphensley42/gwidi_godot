@@ -4,21 +4,30 @@ var hotkeyDetector = null
 var uiUpdateFunc = null
 var gwidiHotkeyOptionsInstance = null
 
-# TODO: Hook this up to UI!
+# TODO: Move this to a global-loaded class to listen across all scenes
+var global_hotkey_detector = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	hotkeyDetector = Gwidi_HotKey.new()
+	hotkeyDetector = Gwidi_HotKeyAssignmentPressDetector.new()
 	gwidiHotkeyOptionsInstance = Gwidi_Options.new()
+	global_hotkey_detector = Gwidi_HotKey.new()
+	global_hotkey_detector.beginListening()
 
 func start_listening(updateFunc):
 	var f = funcref(self, "on_pressed_keys_updated")
 	uiUpdateFunc = updateFunc
 	hotkeyDetector.assignPressedKeyListener(f)
 	hotkeyDetector.beginListening()
+	
+	# stop our global when getting keys to assign
+	global_hotkey_detector.stopListening()
 
 func stop_listening(hotkey_name, do_update):
 	hotkeyDetector.stopListening()
+	
+	# resume our global after finished assigning
+	global_hotkey_detector.beginListening()
 	
 	var ret = hotkeyDetector.pressedKeys()
 	
@@ -38,3 +47,6 @@ func on_pressed_keys_updated():
 	if uiUpdateFunc != null:
 		uiUpdateFunc.call_func(pressedKeys)
 
+func assign_hotkey(name, fn):
+	var f = funcref(fn, "activate")
+	global_hotkey_detector.assignHotkeyFunction(name, f)

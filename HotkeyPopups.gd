@@ -1,6 +1,7 @@
 extends Control
 
 var selected_item = null
+var gwidi_hotkey_options = null
 
 func show_popup():
 	$SettingsDialog.popup_centered()
@@ -11,18 +12,30 @@ func show_enter_keys():
 	$Hotkey_Assignment_Listener.start_listening(f)
 	# Start listening for keys
 
+func fill_item_from_config(item, hotkey_config):
+	var key_list = item.get_node("HBoxContainer/KeyList")
+	var key_fn = item.get_node("HBoxContainer/HotkeyFunction")
+	var keys = hotkey_config[item.hotkey_name]
+	var keys_str = build_key_str(keys)
+	
+	key_list.text = keys_str
+	$Hotkey_Assignment_Listener.assign_hotkey(item.hotkey_name, key_fn)
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	gwidi_hotkey_options = Gwidi_Options.new()
+	var hotkey_config = gwidi_hotkey_options.hotkeyMapping()
+	
 	show_popup()
 	
-	# TODO: Fill the hotkey values from ones already stored in the hotkey config
-	# TODO: Updating already works, just need to show the initial values
 	# TODO: When loading hotkeys, need to assign the functions
 	
 	var items_container = $SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer
 	for child in items_container.get_children():
 		if child.name == "ColumnTitles":
 			continue
+		
+		fill_item_from_config(child, hotkey_config)
 		
 		var button = child.get_node("HBoxContainer/Button")
 		button.connect("pressed", self, "_on_item_setkeys_pressed", [child])
@@ -63,7 +76,7 @@ func build_key_str(pressedKeys):
 		keysStr += entry["name"]
 	
 	return keysStr
-		
+
 func update_pressed_keys_ui(pressedKeys):
 	var keysStr = build_key_str(pressedKeys)
 	$KeyInputDialog/MarginContainer/PanelContainer/VBoxContainer/InputKeys.text = keysStr
