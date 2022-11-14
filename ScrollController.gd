@@ -1,6 +1,6 @@
 extends Node
 
-var scrolling_enabled = true
+var scrolling_disabled_count = 0
 
 var data_count = 0
 var list_offset = 0
@@ -56,7 +56,7 @@ var is_dragging = false
 var dragging_start = null
 var dragging_current = null
 func _input(event):
-	if not scrolling_enabled:
+	if scrolling_disabled_count != 0:
 		return
 		
 	if event is InputEventMouseButton:
@@ -78,7 +78,7 @@ func _input(event):
 			update_scroll()
 
 func _process(_delta):
-	if not scrolling_enabled:
+	if scrolling_disabled_count != 0:
 		return
 		
 	if Input.is_action_pressed("scroll_shift"):
@@ -130,11 +130,19 @@ func update_scroll():
 
 func _on_import_opened():
 	print("_on_import_opened")
-	scrolling_enabled = false
+	scrolling_disabled_count += 1
 
 func _on_import_closed():
 	print("_on_import_closed")
-	scrolling_enabled = true
+	scrolling_disabled_count -= 1
+
+func _on_hotkey_settings_opened():
+	print("_on_hotkey_settings_opened")
+	scrolling_disabled_count += 1
+
+func _on_hotkey_settings_closed():
+	print("_on_hotkey_settings_closed")
+	scrolling_disabled_count -= 1
 
 func _on_playback_scroll(indexedTimeOffset, indexedTime):
 	print("_on_playback_scroll(" + str(indexedTimeOffset) + ", " + str(indexedTime) + ")")

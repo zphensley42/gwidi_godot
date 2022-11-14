@@ -10,6 +10,16 @@ var scroll_controller = null
 var midi_parser = null
 var data_manager = null
 
+var hotkey_popups = null
+var hotkey_events_connected = false
+
+func register_hotkey_popups(h):
+	hotkey_popups = h
+	if scroll_controller != null and hotkey_events_connected == false:
+		hotkey_popups.connect("hotkey_settings_opened", scroll_controller, "_on_hotkey_settings_opened")
+		hotkey_popups.connect("hotkey_settings_closed", scroll_controller, "_on_hotkey_settings_closed")
+		hotkey_events_connected = true
+
 func register_data_manager(d):
 	data_manager = d
 
@@ -23,6 +33,14 @@ func register_scroll_controller(s):
 	midi_parser.connect("import_closed", scroll_controller, "_on_import_closed")
 	data_manager.connect("playback_scroll", scroll_controller, "_on_playback_scroll")
 	
+	if hotkey_popups != null and hotkey_events_connected == false:
+		hotkey_popups.connect("hotkey_settings_opened", scroll_controller, "_on_hotkey_settings_opened")
+		hotkey_popups.connect("hotkey_settings_closed", scroll_controller, "_on_hotkey_settings_closed")
+		hotkey_events_connected = true
+
+func unregister_hotkey_popups():
+	hotkey_popups = null
+
 func unregister_scroll_controller():
 	scroll_controller = null
 

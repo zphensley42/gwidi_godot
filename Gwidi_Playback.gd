@@ -5,7 +5,7 @@ const HotkeySettings = preload("res://scenes/HotkeySettings.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	GwidiDataManager.connect("playback_ended", self, "_on_playback_ended")
-	pass # Replace with function body.
+	get_node("/root/Main2/UiCanvasLayer/HotkeyPopups").register_playback_controller(self)
 
 # 0 = stopped, 1 = play, 2 == pause
 var play_state = 0
@@ -50,7 +50,5 @@ func _on_Button_Add_Measure_pressed():
 
 
 func _on_Button_Settings_pressed():
-	var settings = HotkeySettings.instance()
-	$"/root/Main2/UiCanvasLayer".add_child(settings)
-	settings.popup_centered()
-	settings.show()
+	var n = get_node("/root/Main2/UiCanvasLayer/HotkeyPopups")
+	n.show_popup()
