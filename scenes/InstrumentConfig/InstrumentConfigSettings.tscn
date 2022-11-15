@@ -1,0 +1,69 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/InstrumentConfig/InstrumentConfigSettings.gd" type="Script" id=1]
+[ext_resource path="res://scenes/InstrumentConfig/InstrumentConfigItem.tscn" type="PackedScene" id=2]
+
+[node name="InstrumentConfigSettings" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="ConfigPopup" type="WindowDialog" parent="."]
+visible = true
+margin_right = 48.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 500, 400 )
+window_title = "Instrument Config"
+
+[node name="Margin" type="MarginContainer" parent="ConfigPopup"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="MarginVBox" type="VBoxContainer" parent="ConfigPopup/Margin"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 495.0
+margin_bottom = 395.0
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ConfigPopup/Margin/MarginVBox"]
+margin_right = 490.0
+margin_bottom = 366.0
+size_flags_vertical = 3
+
+[node name="ConfigList" type="VBoxContainer" parent="ConfigPopup/Margin/MarginVBox/ScrollContainer"]
+margin_right = 490.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+
+[node name="InstrumentConfigItem" parent="ConfigPopup/Margin/MarginVBox/ScrollContainer/ConfigList" instance=ExtResource( 2 )]
+visible = false
+margin_bottom = 55.0
+
+[node name="AddItemButton" type="Button" parent="ConfigPopup/Margin/MarginVBox/ScrollContainer/ConfigList"]
+margin_right = 490.0
+margin_bottom = 20.0
+text = "Add Instrument"
+
+[node name="ButtonBar" type="HBoxContainer" parent="ConfigPopup/Margin/MarginVBox"]
+margin_top = 370.0
+margin_right = 490.0
+margin_bottom = 390.0
+
+[node name="ButtonCancel" type="Button" parent="ConfigPopup/Margin/MarginVBox/ButtonBar"]
+margin_right = 243.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Cancel"
+
+[node name="ButtonOkay" type="Button" parent="ConfigPopup/Margin/MarginVBox/ButtonBar"]
+margin_left = 247.0
+margin_right = 490.0
+margin_bottom = 20.0
+size_flags_horizontal = 3
+text = "Ok"
+
+[connection signal="pressed" from="ConfigPopup/Margin/MarginVBox/ScrollContainer/ConfigList/AddItemButton" to="." method="_on_add_instrument_pressed"]

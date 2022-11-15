@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=2]
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0.254902, 0.247059, 0.294118, 1 )
+shadow_size = 2
+
+[node name="InputPopup" type="PopupDialog"]
+margin_right = 40.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 100 )
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/margin_right = 5
+custom_constants/margin_top = 5
+custom_constants/margin_left = 5
+custom_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 5.0
+margin_top = 5.0
+margin_right = 195.0
+margin_bottom = 95.0
+custom_constants/separation = 10
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer"]
+margin_right = 190.0
+margin_bottom = 50.0
+custom_styles/panel = SubResource( 2 )
+
+[node name="InputEdit" type="LineEdit" parent="MarginContainer/VBoxContainer/PanelContainer"]
+margin_right = 190.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 0, 50 )
+hint_tooltip = "Input text..."
+size_flags_horizontal = 3
+align = 1
+placeholder_text = "Input..."
+caret_blink = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+margin_left = 50.0
+margin_top = 60.0
+margin_right = 140.0
+margin_bottom = 80.0
+size_flags_horizontal = 4
+custom_constants/separation = 5
+
+[node name="ButtonCancel" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_right = 54.0
+margin_bottom = 20.0
+text = "Cancel"
+
+[node name="ButtonOkay" type="Button" parent="MarginContainer/VBoxContainer/HBoxContainer"]
+margin_left = 59.0
+margin_right = 90.0
+margin_bottom = 20.0
+text = "OK"
