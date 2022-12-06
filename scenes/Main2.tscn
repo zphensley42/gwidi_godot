@@ -1,10 +1,22 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Gwidi_Midi_Parser.gd" type="Script" id=1]
 [ext_resource path="res://scenes/MeasureRecyclerListH.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Gwidi_Playback.gd" type="Script" id=3]
 [ext_resource path="res://SampleManager.gd" type="Script" id=4]
+[ext_resource path="res://scripts/GlobalWindowFocusManager.gd" type="Script" id=5]
 [ext_resource path="res://scenes/HotkeySettings.tscn" type="PackedScene" id=6]
+
+[sub_resource type="StyleBoxFlat" id=1]
+content_margin_left = 0.0
+content_margin_right = 0.0
+content_margin_top = 0.0
+content_margin_bottom = 0.0
+bg_color = Color( 0.407843, 0.847059, 0.345098, 1 )
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
 
 [node name="Main2" type="Node2D"]
 
@@ -46,64 +58,112 @@ anchor_right = 1.0
 margin_bottom = 50.0
 color = Color( 0.168627, 0.168627, 0.168627, 1 )
 
-[node name="Button_Import" type="Button" parent="UiCanvasLayer"]
-margin_right = 100.0
+[node name="HBoxContainer" type="HBoxContainer" parent="UiCanvasLayer"]
+anchor_right = 1.0
 margin_bottom = 50.0
+custom_constants/separation = 10
+
+[node name="Button_Import" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_right = 101.0
+margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Import"
 
-[node name="Button_Load" type="Button" parent="UiCanvasLayer"]
-margin_left = 100.0
-margin_right = 200.0
+[node name="Button_Load" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 111.0
+margin_right = 212.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Load"
 
-[node name="Button_Save" type="Button" parent="UiCanvasLayer"]
-margin_left = 200.0
-margin_right = 300.0
+[node name="Button_Save" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 222.0
+margin_right = 323.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Save"
 
-[node name="Button Clear" type="Button" parent="UiCanvasLayer"]
-margin_left = 300.0
-margin_right = 400.0
+[node name="Button Clear" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 333.0
+margin_right = 434.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Clear"
 
-[node name="Button_Play" type="Button" parent="UiCanvasLayer"]
-margin_left = 400.0
-margin_right = 500.0
+[node name="Button_Play" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 444.0
+margin_right = 545.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Play"
 
-[node name="Button_Stop" type="Button" parent="UiCanvasLayer"]
-margin_left = 500.0
-margin_right = 600.0
+[node name="Button_Stop" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 555.0
+margin_right = 656.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Stop"
 
-[node name="Button_Settings" type="Button" parent="UiCanvasLayer"]
-margin_left = 800.0
-margin_right = 900.0
+[node name="Button_Settings" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 666.0
+margin_right = 767.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Settings"
 
-[node name="Button_Add_Measure" type="Button" parent="UiCanvasLayer"]
-margin_left = 900.0
-margin_right = 1024.0
+[node name="Button_Add_Measure" type="Button" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 777.0
+margin_right = 879.0
 margin_bottom = 50.0
+size_flags_horizontal = 3
 text = "Add Measure"
+
+[node name="StatusContainer" type="VBoxContainer" parent="UiCanvasLayer/HBoxContainer"]
+margin_left = 889.0
+margin_top = 15.0
+margin_right = 1024.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 125, 0 )
+size_flags_horizontal = 0
+size_flags_vertical = 4
+
+[node name="WindowFocusedStatusContainer" type="PanelContainer" parent="UiCanvasLayer/HBoxContainer/StatusContainer"]
+margin_right = 135.0
+margin_bottom = 20.0
+custom_styles/panel = SubResource( 1 )
+
+[node name="BG" type="ColorRect" parent="UiCanvasLayer/HBoxContainer/StatusContainer/WindowFocusedStatusContainer"]
+margin_right = 135.0
+margin_bottom = 20.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+color = Color( 1, 0.345098, 0.333333, 1 )
+
+[node name="WindowFocusedStatus" type="Label" parent="UiCanvasLayer/HBoxContainer/StatusContainer/WindowFocusedStatusContainer"]
+margin_top = 3.0
+margin_right = 135.0
+margin_bottom = 17.0
+rect_min_size = Vector2( 135, 0 )
+custom_colors/font_color = Color( 0, 0, 0, 1 )
+text = "Window Not Focused"
 
 [node name="HotkeyPopups" parent="UiCanvasLayer" instance=ExtResource( 6 )]
 visible = false
 margin_top = 70.0
 margin_bottom = -290.0
 
+[node name="GlobalWindowFocusManager" type="Node" parent="."]
+script = ExtResource( 5 )
+focusStatusLabel = NodePath("../UiCanvasLayer/HBoxContainer/StatusContainer/WindowFocusedStatusContainer/WindowFocusedStatus")
+focusStatusLabelContainer = NodePath("../UiCanvasLayer/HBoxContainer/StatusContainer/WindowFocusedStatusContainer")
+focusStatusBG = NodePath("../UiCanvasLayer/HBoxContainer/StatusContainer/WindowFocusedStatusContainer/BG")
+
 [connection signal="file_selected" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_file_selected"]
 [connection signal="hide" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_hide"]
 [connection signal="modal_closed" from="Gwidi_Midi_Parser/ImportCanvasLayer/MidiImportDialog" to="Gwidi_Midi_Parser" method="_on_MidiImportDialog_modal_closed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Import" to="Gwidi_Midi_Parser" method="_on_Button_Import_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button Clear" to="Gwidi_Playback" method="_on_Button_Clear_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Stop" to="Gwidi_Playback" method="_on_Button_Stop_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Settings" to="Gwidi_Playback" method="_on_Button_Settings_pressed"]
-[connection signal="pressed" from="UiCanvasLayer/Button_Add_Measure" to="Gwidi_Playback" method="_on_Button_Add_Measure_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button_Import" to="Gwidi_Midi_Parser" method="_on_Button_Import_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button Clear" to="Gwidi_Playback" method="_on_Button_Clear_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button_Play" to="Gwidi_Playback" method="_on_Button_Play_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button_Stop" to="Gwidi_Playback" method="_on_Button_Stop_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button_Settings" to="Gwidi_Playback" method="_on_Button_Settings_pressed"]
+[connection signal="pressed" from="UiCanvasLayer/HBoxContainer/Button_Add_Measure" to="Gwidi_Playback" method="_on_Button_Add_Measure_pressed"]

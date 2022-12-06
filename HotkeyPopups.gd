@@ -24,7 +24,7 @@ func setup():
 	var hotkey_config = gwidi_hotkey_options.hotkeyMapping()
 	
 	for hotkeyName in hotkey_config:
-		get_node("Hotkey_Listener").assign_hotkey(hotkeyName, known_hotkey_functions[hotkeyName])
+		HotkeyListener.assign_hotkey(hotkeyName, known_hotkey_functions[hotkeyName])
 	
 	var items_container = get_node("SettingsDialog/MarginContainer/ScrollContainer/VBoxContainer")
 	for child in items_container.get_children():
@@ -45,7 +45,7 @@ func setup():
 func show_popup():
 	# disable scrolling the notes while open
 	emit_signal("hotkey_settings_opened")
-	get_node("Hotkey_Listener").stop_listening()
+	HotkeyListener.stop()
 	get_node("SettingsDialog").popup_centered()
 
 func show_enter_keys():
@@ -54,14 +54,20 @@ func show_enter_keys():
 	get_node("Hotkey_Assignment_Listener").start_listening(f)
 	# Start listening for keys
 
+func emit_hotkey_signal(hotkey):
+	emit_signal("")
+
 func fill_item_from_config(item, hotkey_config):
 	var key_list = item.get_node("HBoxContainer/KeyList")
 	var key_fn = item.get_node("HBoxContainer/HotkeyFunction")
 	var keys = hotkey_config[item.hotkey_name]
 	var keys_str = build_key_str(keys)
 	
+	var key_fn_signal_name = key_fn.hotkeySignal
+	var key_fn_ref = funcref(key_fn, "activate")
+	
 	key_list.text = keys_str
-	get_node("Hotkey_Assignment_Listener").assign_hotkey(item.hotkey_name, key_fn)
+	HotkeyListener.assign_hotkey(item.hotkey_name, key_fn_ref)
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -108,7 +114,7 @@ var last_visible = false
 func _on_SettingsDialog_visibility_changed():
 	var new_visible = get_node("SettingsDialog").visible
 	if last_visible != new_visible and new_visible == false:
-		get_node("Hotkey_Listener").start_listening()
+		HotkeyListener.start()
 		emit_signal("hotkey_settings_closed")
 	
 	last_visible = new_visible
