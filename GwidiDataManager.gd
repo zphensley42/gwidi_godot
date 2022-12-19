@@ -4,6 +4,8 @@ signal playback_scroll
 signal playback_note
 signal playback_ended
 
+export var PlayFakeSound = false
+
 var assigned_data = null
 var playback = null
 var sample_manager = null
@@ -78,7 +80,8 @@ func notes_playback(notes):
 	print("notes_playback, size: " + str(notes.size()))
 	if(sample_manager):
 		for note in notes:
-			sample_manager.play_sample_for_note(note)
+			if(PlayFakeSound):
+				sample_manager.play_sample_for_note(note)
 			
 			# emit the note we are playing to update its view on screen
 			# a hack to make this quicker is to just emit note data that each note
@@ -124,7 +127,7 @@ func playback_play():
 		#playback.assignPlayEndedFn(ended_cb)
 		
 		# for testing
-		playback.setRealInput(false)
+		playback.setRealInput(true)
 		
 		var f = funcref(playback, "play")
 		call_playback_func(f)
